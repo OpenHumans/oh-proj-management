@@ -1,0 +1,16 @@
+{
+  "name": "Django Sample",
+  "description": "A barebones Django app created with startproject",
+  "repository": "https://github.com/OpenHumans/oh-proj-management",
+  "keywords": ["django"],
+  "env": {
+    "SECRET_KEY": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "secret"
+    },
+    "HEROKU_DEPLOY": {
+      "description": "Indicate if the deployment is occurring on Heroku.",
+      "value": "true"
+    }
+  }
+}
