@@ -26,6 +26,7 @@ coverage.xml
 *.log
 local_settings.py
 staticfiles/
+db.sqlite3
 
 # dotenv (used by foreman)
 .env
