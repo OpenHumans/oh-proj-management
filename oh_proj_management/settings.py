@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+import dj_database_url
+
 
 def to_bool(string, default):
     """Convert os environment variable to boolean."""
@@ -36,7 +38,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = to_bool(os.getenv('DEBUG'), default=False)
 
 # Enable any host for Heroku deployments.
-if to_bool(os.getenv('HEROKU_DEPLOY'), False):
+if to_bool(os.getenv('ON_HEROKU'), False):
     ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = []
@@ -99,6 +101,11 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Set up Heroku database.
+if to_bool(os.getenv('ON_HEROKU'), False):
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
 
 
 # Password validation
