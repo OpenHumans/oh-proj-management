@@ -12,6 +12,12 @@ import os
 
 import dj_database_url
 
+from env_tools import apply_env
+
+
+# Apply the env in the .env file
+apply_env()
+
 
 def to_bool(string, default):
     """Convert os environment variable to boolean."""

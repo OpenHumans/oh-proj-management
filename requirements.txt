@@ -1,11 +1,15 @@
 certifi==2017.7.27.1
 chardet==3.0.4
+configparser==3.5.0
 dj-database-url==0.4.2
 Django==2.0.2
+env-tools==2.1.0
 gunicorn==19.7.1
 idna==2.6
 psycopg2==2.7.3
 pytz==2018.3
 requests==2.18.4
+six==1.11.0
+tini==3.0.1
 urllib3==1.22
 whitenoise==3.3.0
