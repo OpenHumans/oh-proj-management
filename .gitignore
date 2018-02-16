@@ -1,4 +1,5 @@
 # Byte-compiled / optimized / DLL files
+#
 __pycache__/
 *.py[cod]
 *$py.class
@@ -30,3 +31,9 @@ db.sqlite3
 
 # dotenv (environment variables, used for secret/local stuff)
 .env
+
+#Name of the virtual environment
+my_project
+
+#Pipfile
+Pipfile
