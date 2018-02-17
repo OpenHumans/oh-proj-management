@@ -22,9 +22,11 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
  * Use Python 3.x. (The app should work with Heroku's current Python 3 support.)
  * Copy `env.example` to `.env` and modify as needed.
  * Set up a virtual environment (see below)
- * Install requirements with `pip install -r requirements.txt`
- * Run `python manage.py migrate` to update the database
- * Run `python manage.py runserver` to start the web server
+ * Use the virtual environment created using pipenv in the ~/.local directory.
+ * Run `pipenv shell` to activate the virtual environment
+ * Install requirements with `pipenv --three install`
+ * Run `python3 manage.py migrate` to update the database
+ * Run `python3 manage.py runserver` to start the web server
  * In a browser, go to http://127.0.0.1:8000/
 
 ## Contributing
@@ -35,6 +37,7 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
 
 **Virtual environments:** If you're new to developing Python projects, we strongly recommend you learn about using virtual environments for your work. Either virtualenv (with virtualenvwrapper recommended) or conda are reasonable options.
  * About virtualenv and virtualenvwrapper: http://docs.python-guide.org/en/latest/dev/virtualenvs/
+ ..* Use the command `sudo -H pip install -U pipenv` while installing pipenv.
  * About Conda's virtual environments: https://conda.io/docs/user-guide/tasks/manage-environments.html
 
 When developing on your own machine, you should be installing requirements from `requirements.txt` within a virtual environment – not globally.
