@@ -24,7 +24,7 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
  * Set up a virtual environment (see below)
  * Use the virtual environment created using pipenv in the ~/.local directory.
  * Run `pipenv shell` to activate the virtual environment
- * Install requirements with `pip3 install -r requirements.txt`
+ * Install requirements with `pipenv --three install`
  * Run `python3 manage.py migrate` to update the database
  * Run `python3 manage.py runserver` to start the web server
  * In a browser, go to http://127.0.0.1:8000/
