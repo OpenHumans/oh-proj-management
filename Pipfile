@@ -1,0 +1,32 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[dev-packages]
+
+
+
+[packages]
+
+certifi = "*"
+chardet = "*"
+configparser = "*"
+dj-database-url = "*"
+Django = "*"
+env-tools = "*"
+gunicorn = "*"
+idna = "*"
+psycopg2 = "*"
+pytz = "*"
+requests = "*"
+tini = "*"
+urllib3 = "*"
+whitenoise = "*"
+
+
+[requires]
+
+python_version = "3.5"
