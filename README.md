@@ -36,6 +36,7 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
 
 **Virtual environments:** If you're new to developing Python projects, we strongly recommend you learn about using virtual environments for your work. Either virtualenv (with virtualenvwrapper recommended) or conda are reasonable options.
  * About virtualenv and virtualenvwrapper: http://docs.python-guide.org/en/latest/dev/virtualenvs/
+ ..* Use the command `sudo -H pip install -U pipenv` while installing pipenv.
  * About Conda's virtual environments: https://conda.io/docs/user-guide/tasks/manage-environments.html
 
 When developing on your own machine, you should be installing requirements from `requirements.txt` within a virtual environment – not globally.
