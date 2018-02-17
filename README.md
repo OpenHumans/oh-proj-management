@@ -22,7 +22,8 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
  * Use Python 3.x. (The app should work with Heroku's current Python 3 support.)
  * Copy `env.example` to `.env` and modify as needed.
  * Set up a virtual environment (see below)
- * Make sure you name the virtual environment as `my_project`
+ * Use the virtual environment created using pipenv in the ~/.local directory.
+ * Run `pipenv shell` to activate the virtual environment
  * Install requirements with `pip3 install -r requirements.txt`
  * Run `python3 manage.py migrate` to update the database
  * Run `python3 manage.py runserver` to start the web server
