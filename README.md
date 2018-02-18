@@ -22,9 +22,9 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
  * Use Python 3.x. (The app should work with Heroku's current Python 3 support.)
  * Copy `env.example` to `.env` and modify as needed.
  * Set up a virtual environment (see below)
- * Install requirements with `pipenv --three install`
- * Run `python3 manage.py migrate` to update the database
- * Run `python3 manage.py runserver` to start the web server
+ * Install requirements with `pip install -r requirements.txt`
+ * Run `python manage.py migrate` to update the database
+ * Run `python manage.py runserver` to start the web server
  * In a browser, go to http://127.0.0.1:8000/
 
 ## Contributing
@@ -33,13 +33,11 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
 
 **Django tutorial:** If you're new to Django, we recommend you do [the Django tutorial](https://docs.djangoproject.com/en/2.0/intro/tutorial01/) first, to get a feel for Django project development
 
-**Virtual environments:** If you're new to developing Python projects, we strongly recommend you learn about using virtual environments for your work.
-  This project uses pipenv — the officially recommended Python packaging tool from Python.org. Read more about pipenv here: https://docs.pipenv.org/
+**Virtual environments:** If you're new to developing Python projects, we strongly recommend you learn about using virtual environments for your work. Either virtualenv (with virtualenvwrapper recommended) or conda are reasonable options.
+ * About virtualenv and virtualenvwrapper: http://docs.python-guide.org/en/latest/dev/virtualenvs/
+ * About Conda's virtual environments: https://conda.io/docs/user-guide/tasks/manage-environments.html
 
-  * Install pipenv with `pip install pipenv`
-  * Activate the virtual environment with `pipenv shell`
-
-  When developing on your own machine, you should be installing requirements from `Pipfile` within a virtual environment – not globally.
+When developing on your own machine, you should be installing requirements from `requirements.txt` within a virtual environment – not globally.
 
 **Environment variables:** In Heroku, environment variables are used to store instance-specific information, including secret/sensitive items like tokens and secret codes. For local development, use the `.env` to set the environment variables used by your app.
 
