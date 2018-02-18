@@ -9,7 +9,7 @@ from .forms import TokenForm
 
 
 class HomeView(TemplateView):
-    template_name = "oh_proj_management/home.html"
+    template_name = "project_admin/home.html"
 
     def get(self, request, *args, **kwargs):
         token = None
@@ -43,7 +43,7 @@ class HomeView(TemplateView):
 
 
 class LoginView(FormView):
-    template_name = 'oh_proj_management/login.html'
+    template_name = 'project_admin/login.html'
     form_class = TokenForm
     success_url = reverse_lazy('home')
 
