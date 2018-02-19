@@ -3,7 +3,7 @@
 from django.urls import path
 from django.contrib import admin
 
-from .views import HomeView, LoginView
+from project_admin.views import HomeView, LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
