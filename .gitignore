@@ -30,3 +30,4 @@ db.sqlite3
 
 # dotenv (environment variables, used for secret/local stuff)
 .env
+.idea/
