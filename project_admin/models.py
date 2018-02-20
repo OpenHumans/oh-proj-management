@@ -1,10 +1,6 @@
 from django.db import models
-#from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 
-
-class User(models.Model):
-    username = models.CharField(max_length=50)
-    token = models.CharField(max_length=200)
 
 
 class Project(models.Model):

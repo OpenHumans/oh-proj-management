@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
 
-from .forms import TokenForm, SignUpForm
+from .forms import TokenForm
 from .models import Project, User
 
 
@@ -31,7 +31,7 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['member_data'] = self.member_data
         return context
-)
+
 
     #def form_valid(self, form):
     def token_for_memberlist(self, token):
@@ -51,28 +51,20 @@ class LoginView(FormView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        token = form.cleaned_data['token']
-        signupview = SignUpView()
-        return redirect('signup', token)
+       token = form.cleaned_data['token']
 
-    #    token = form.cleaned_data['token']
-    #    req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
-    #    params = {'token': token}
-    #    r = requests.get(req_url, params=params).json()
-    #    r['user']=User.objects.get(username = form.cleaned_data['username'])
-    #    Project.objects.update_or_create(**r)
-    #    self.request.session['master_access_token'] = token
-    #    return redirect('home')
-
-    def form_valid(self, form):
-        token = form.cleaned_data['token']
-        req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
-        params = {'token': token}
-        r = requests.get(req_url, params=params).json()
-        entry = Project.objects.get(pk=r['id'])
-        if Project.objects.filter(pk=entry.pk).exists():
+       req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
+       params = {'token': token}
+       r = requests.get(req_url, params=params).json()
+       print(Project.objects.filter(id = r['id']).exists())
+       if (Project.objects.filter(id = r['id']).exists()):
+            Project.objects.update(**r)
+            self.request.session['master_access_token'] = token
             return redirect('home')
-        else:
-            return redirect('signup', **r)
+       else:
+            user = User.objects.create(username = r['id_label'])
+            r['user'] = user
+            project = Project.objects.create(**r)
+            self.request.session['master_access_token'] = token
+            return redirect('home')
 
-class SignUpView(FormView):
