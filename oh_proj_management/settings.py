@@ -52,6 +52,7 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    'project_admin.apps.ProjectAdminConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,7 +62,6 @@ INSTALLED_APPS = [
 
     # Local apps.
     'oh_proj_management',
-    'project_admin'
 ]
 
 MIDDLEWARE = [

@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
 
 from .forms import TokenForm
+from .models import Project
 
 
 class HomeView(TemplateView):
@@ -49,5 +50,9 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         token = form.cleaned_data['token']
+        req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
+        params = {'token': token}
+        r = requests.get(req_url, params=params).json()
+        Project.objects.update_or_create(**r)
         self.request.session['master_access_token'] = token
         return redirect('home')
