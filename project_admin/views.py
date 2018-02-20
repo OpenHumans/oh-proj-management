@@ -53,6 +53,6 @@ class LoginView(FormView):
         req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
         params = {'token': token}
         r = requests.get(req_url, params=params).json()
-        Project.objects.update_or_create(**r)
+        Project.objects.update_or_create(id=r['id'], defaults=r)
         self.request.session['master_access_token'] = token
         return redirect('home')
