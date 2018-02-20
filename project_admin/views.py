@@ -19,6 +19,7 @@ class HomeView(TemplateView):
         if 'master_access_token' in request.session:
             token = request.session['master_access_token']
             self.member_data = self.token_for_memberlist(token)
+            self.token = token
             if not self.member_data:
                 del request.session['master_access_token']
 
@@ -30,6 +31,7 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['member_data'] = self.member_data
+        context['Project'] = Project.objects.get(token = self.token)
         return context
 
     def token_for_memberlist(self, token):
@@ -53,6 +55,8 @@ class LoginView(FormView):
         req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
         params = {'token': token}
         r = requests.get(req_url, params=params).json()
-        Project.objects.update_or_create(id=r['id'], defaults=r)
+        r['token'] = token
+        project = Project.objects.update_or_create(id=r['id'], defaults=r)
+        print(project)
         self.request.session['master_access_token'] = token
         return redirect('home')
