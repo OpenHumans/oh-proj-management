@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
 
 from .forms import TokenForm
+
 from .models import Project, User
 
 
