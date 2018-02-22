@@ -39,7 +39,7 @@ class HomeView(TemplateView):
         if req.status_code == 200:
             return req.json()
         else:
-            messages.error('Token not valid. Maybe a fresh one is needed?')
+            messages.error(self.request, 'Token not valid. Maybe a fresh one is needed?')
             return None
 
 
@@ -53,6 +53,14 @@ class LoginView(FormView):
         req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
         params = {'token': token}
         r = requests.get(req_url, params=params).json()
-        Project.objects.update_or_create(id=r['id'], defaults=r)
-        self.request.session['master_access_token'] = token
+        try:
+            Project.objects.update_or_create(id=r['id'], defaults=r)
+            self.request.session['master_access_token'] = token
+        except Exception as e:
+            # Handle expired master tokens, or serve error message
+            if 'Expired token' in r['detail']:
+                messages.error(self.request, 'Token has expired. Refresh your token in the project management interface.')
+            else:
+                messages.error(self.request, e)
+        
         return redirect('home')
