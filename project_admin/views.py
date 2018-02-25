@@ -4,9 +4,10 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
+from django.contrib.auth import login,authenticate
 
 from .forms import TokenForm
-from .models import Project
+from .models import Project, User
 
 
 class HomeView(TemplateView):
@@ -32,6 +33,8 @@ class HomeView(TemplateView):
         context['member_data'] = self.member_data
         return context
 
+
+    #def form_valid(self, form):
     def token_for_memberlist(self, token):
         req_url = ('https://www.openhumans.org/api/direct-sharing/project/'
                    'members/?access_token={}'.format(token))
@@ -50,17 +53,45 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         token = form.cleaned_data['token']
+        username = form.cleaned_data['username']
+        if(username):
+           print(username)
+
+           user = form.save()
+           print(user)
+           login(self.request,user, backend='django.contrib.auth.backends.ModelBackend')
+           print("success")
+           return redirect('home')
+
         req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
         params = {'token': token}
         r = requests.get(req_url, params=params).json()
-        try:
-            Project.objects.update_or_create(id=r['id'], defaults=r)
-            self.request.session['master_access_token'] = token
-        except Exception as e:
-            # Handle expired master tokens, or serve error message
-            if 'Expired token' in r['detail']:
-                messages.error(self.request, 'Token has expired. Refresh your token in the project management interface.')
-            else:
-                messages.error(self.request, e)
-        
-        return redirect('home')
+        print(Project.objects.filter(id = r['id']).exists())
+        if (Project.objects.filter(id = r['id']).exists()):
+            try:
+                Project.objects.update(id=r['id'], defaults=r)
+                self.request.session['master_access_token'] = token
+            except Exception as e:
+                # Handle expired master tokens, or serve error message
+                if 'Expired token' in r['detail']:
+                    messages.error(self.request,
+                                   'Token has expired. Refresh your token in the project management interface.')
+                else:
+                    messages.error(self.request, e)
+
+                return redirect('home')
+        else:
+            try:
+                user = User.objects.create(username = r['id_label'])
+                r['user'] = user
+                project = Project.objects.create(id=r['id'], defaults=r)
+            except Exception as e:
+                # Handle expired master tokens, or serve error message
+                if 'Expired token' in r['detail']:
+                    messages.error(self.request,
+                                   'Token has expired. Refresh your token in the project management interface.')
+                else:
+                    messages.error(self.request, e)
+
+                self.request.session['master_access_token'] = token
+                return redirect('home')
