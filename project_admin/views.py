@@ -52,7 +52,6 @@ class LoginView(FormView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-
         token = form.cleaned_data['token']
         username = form.cleaned_data['username']
         if(username):
