@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
+from django.contrib.auth import login,authenticate
 
 from .forms import TokenForm
 from .models import Project, User
@@ -52,6 +53,15 @@ class LoginView(FormView):
 
     def form_valid(self, form):
        token = form.cleaned_data['token']
+       username = form.cleaned_data['username']
+       if(username):
+           print(username)
+
+           user = form.save()
+           print(user)
+           login(self.request,user, backend='django.contrib.auth.backends.ModelBackend')
+           print("success")
+           return redirect('home')
 
        req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
        params = {'token': token}

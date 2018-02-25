@@ -77,7 +77,9 @@ MIDDLEWARE = [
     # https://warehouse.python.org/project/whitenoise/
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    ]
 ROOT_URLCONF = 'oh_proj_management.urls'
 
 TEMPLATES = [
