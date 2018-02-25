@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Project(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     active = models.BooleanField()
     approved = models.BooleanField()
     authorized_members = models.IntegerField()
