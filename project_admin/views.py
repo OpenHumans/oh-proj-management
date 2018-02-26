@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, TemplateView
+from django.contrib.auth.models import User
+from django.contrib.auth import login
 
 from .forms import TokenForm
 from .models import Project
@@ -54,14 +56,20 @@ class LoginView(FormView):
         token = form.cleaned_data['token']
         req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
         params = {'token': token}
-        r = requests.get(req_url, params=params).json()
+        project_info = requests.get(req_url, params=params).json()
         try:
-            Project.objects.update_or_create(id=r['id'], defaults=r)
+            if not User.objects.filter(username=project_info['id_label']).exists():
+                user = User.objects.create_user(username = project_info['id_label'])
+            else:
+                user = User.objects.get(username = project_info['id_label'])
+            project_info['user'] = user
+            Project.objects.update_or_create(id=project_info['id'], defaults=project_info)
+            login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
             self.request.session['master_access_token'] = token
         except Exception as e:
             # Handle expired master tokens, or serve error message
-            if 'Expired token' in r['detail']:
-                messages.error(self.request, 'Token has expired. Refresh your token in the project management interface.')
+            if 'detail' in project_info:
+                messages.error(self.request, project_info['detail'] + 'Check your token in the project management interface.')
             else:
                 messages.error(self.request, e)
         return redirect('home')
