@@ -63,6 +63,7 @@ class LoginView(FormView):
             else:
                 user = User.objects.get(username = project_info['id_label'])
             project_info['user'] = user
+            project_info['token'] = token
             Project.objects.update_or_create(id=project_info['id'], defaults=project_info)
             login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
             self.request.session['master_access_token'] = token
