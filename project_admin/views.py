@@ -25,6 +25,14 @@ class HomeView(TemplateView):
             if not self.member_data:
                 del request.session['master_access_token']
 
+            # Check for old session (previous migration) that has no Project token stored in our models.
+            # If a stale session is found, flush the session and redirect back to login.
+            try:
+                project = Project.objects.get(token = token)
+            except Project.DoesNotExist:
+                self.request.session.flush()
+                return redirect('login')
+
         if self.member_data:
             return super().get(request, *args, **kwargs)
         else:
