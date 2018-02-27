@@ -21,8 +21,17 @@ class HomeView(TemplateView):
         if 'master_access_token' in request.session:
             token = request.session['master_access_token']
             self.member_data = self.token_for_memberlist(token)
+            self.token = token
             if not self.member_data:
                 del request.session['master_access_token']
+
+            # Check for old session (previous migration) that has no Project token stored in our models.
+            # If a stale session is found, flush the session and redirect back to login.
+            try:
+                project = Project.objects.get(token = token)
+            except Project.DoesNotExist:
+                self.request.session.flush()
+                return redirect('login')
 
         if self.member_data:
             return super().get(request, *args, **kwargs)
@@ -32,6 +41,7 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['member_data'] = self.member_data
+        context['Project'] = Project.objects.get(token = self.token)
         return context
 
     def token_for_memberlist(self, token):
@@ -61,6 +71,7 @@ class LoginView(FormView):
             else:
                 user = User.objects.get(username = project_info['id_label'])
             project_info['user'] = user
+            project_info['token'] = token
             Project.objects.update_or_create(id=project_info['id'], defaults=project_info)
             login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
             self.request.session['master_access_token'] = token
@@ -70,5 +81,4 @@ class LoginView(FormView):
                 messages.error(self.request, project_info['detail'] + 'Check your token in the project management interface.')
             else:
                 messages.error(self.request, e)
-
         return redirect('home')

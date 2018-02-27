@@ -4,24 +4,20 @@
 
 <h1>Hello world.</h1>
 
-<b>Member data:</b>
+
 <table class="table">
-  <tr>
-    <th>Proj member ID</th>
-    <th>Files</th>
-  </tr>
-  {% for member in member_data.results %}
-    <tr>
-      <td>{{ member.project_member_id }}</td>
-      <td>
-        {% for item in member.data %}
-        <p>{{ item.source }}: {{ item.basename }}</p>
-        {% endfor %}
-      </td>
-    </tr>
-  {% endfor %}
+
+    <tr><td>Name</td><td>{{ Project.name }}</td></tr>
+    <tr><td>Leader</td><td>{{ Project.leader }}</td></tr>
+    <tr><td>Badge_Image</td><td>{{ Project.badge_image }}</td></tr>
+    <tr><td>Contact_email</td><td>{{ Project.contact_email }}</td></tr>
+    <tr><td>Info_Url</td><td>{{ Project.info_url }}</td></tr>
+    <tr><td>Long_Description</td><td>{{ Project.long_description }}</td></tr>
+    <tr><td>Organization</td><td>{{ Project.organization }}</td></tr>
+    <tr><td>Short Description</td><td>{{ Project.short_description }}</td></tr>
+    <tr><td>Slug</td><td>{{ Project.slug }}</td></tr>
+    <tr><td>Type</td><td>{{ Project.type }}</td></tr>
+
 </table>
-  {% for item in member_data.results %}
-    <p>{{ item }}</p>
-  {% endfor %}
+
 {% endblock main_container %}
