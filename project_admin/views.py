@@ -41,12 +41,11 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['member_data'] = self.member_data
-        context['Project'] = Project.objects.get(token = self.token)
+        context['Project'] = Project.objects.get(token=self.token)
         return context
 
     def token_for_memberlist(self, token):
-        req_url = ('https://www.openhumans.org/api/direct-sharing/project/'
-                   'members/?access_token={}'.format(token))
+        req_url = ('https://www.openhumans.org/api/direct-sharing/project/members/?access_token={}'.format(token))
         req = requests.get(req_url)
         if req.status_code == 200:
             return req.json()
@@ -62,14 +61,15 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         token = form.cleaned_data['token']
-        req_url = ("https://www.openhumans.org/api/direct-sharing/project/?access_token={}".format(token))
+        req_url = ('https://www.openhumans.org/api/direct-sharing/project/?access_token={}'.format(token))
         params = {'token': token}
         project_info = requests.get(req_url, params=params).json()
         try:
-            if not User.objects.filter(username=project_info['id_label']).exists():
-                user = User.objects.create_user(username = project_info['id_label'])
+            if not User.objects.filter(username=project_info['id_label'])\
+                    .exists():
+                user = User.objects.create_user(username=project_info['id_label'])
             else:
-                user = User.objects.get(username = project_info['id_label'])
+                user = User.objects.get(username=project_info['id_label'])
             project_info['user'] = user
             project_info['token'] = token
             Project.objects.update_or_create(id=project_info['id'], defaults=project_info)
@@ -78,7 +78,8 @@ class LoginView(FormView):
         except Exception as e:
             # Handle expired master tokens, or serve error message
             if 'detail' in project_info:
-                messages.error(self.request, project_info['detail'] + 'Check your token in the project management interface.')
+                messages.error(self.request, project_info['detail'] +
+                               'Check your token in the project management interface.')
             else:
                 messages.error(self.request, e)
         return redirect('home')

@@ -1,5 +1,3 @@
-#oh_proj_management URL Configuration
-
 from django.urls import path
 from django.contrib import admin
 

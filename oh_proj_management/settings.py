@@ -83,7 +83,7 @@ ROOT_URLCONF = 'oh_proj_management.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'project_admin','templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'project_admin', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

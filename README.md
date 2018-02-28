@@ -26,6 +26,7 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
  * Run `python3 manage.py migrate` to update the database
  * Run `python3 manage.py runserver` to start the web server
  * In a browser, go to http://127.0.0.1:8000/
+ * Before commiting run `flake8 oh_proj_management` and fix PEP8 warnings.
 
 ## Contributing
 
