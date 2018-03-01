@@ -1,5 +1,7 @@
 # oh-proj-management
 
+[![Build Status](https://travis-ci.org/OpenHumans/oh-proj-management.svg?branch=master)](https://travis-ci.org/OpenHumans/oh-proj-management)
+
 Web app which Open Humans projects can use to view and work with their members and data.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
