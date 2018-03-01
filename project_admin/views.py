@@ -28,7 +28,7 @@ class HomeView(TemplateView):
             # Check for old session (previous migration) that has no Project token stored in our models.
             # If a stale session is found, flush the session and redirect back to login.
             try:
-                project = Project.objects.get(token = token)
+                Project.objects.get(token=token)
             except Project.DoesNotExist:
                 self.request.session.flush()
                 return redirect('login')
