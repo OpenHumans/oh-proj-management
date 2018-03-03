@@ -1,14 +1,13 @@
 import requests
-
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
-
 from .forms import TokenForm
 from .models import Project
+
 
 class HomeView(ListView):
     template_name = "project_admin/home.html"
@@ -52,6 +51,7 @@ class LoginView(FormView):
             else:
                 messages.error(self.request, e)
             return redirect('login')
+
 
 class LogoutView(TemplateView):
 
