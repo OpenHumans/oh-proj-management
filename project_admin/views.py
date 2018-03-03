@@ -1,57 +1,25 @@
 import requests
-
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
-from django.contrib.auth import login
-
+from django.contrib.auth import login, logout
 from .forms import TokenForm
 from .models import Project
 
 
-class HomeView(TemplateView):
+class HomeView(ListView):
     template_name = "project_admin/home.html"
+    context_object_name = 'project_list'
 
-    def get(self, request, *args, **kwargs):
-        token = None
-        self.member_data = None
-
-        if 'master_access_token' in request.session:
-            token = request.session['master_access_token']
-            self.member_data = self.token_for_memberlist(token)
-            self.token = token
-            if not self.member_data:
-                del request.session['master_access_token']
-
-            # Check for old session (previous migration) that has no Project token stored in our models.
-            # If a stale session is found, flush the session and redirect back to login.
-            try:
-                Project.objects.get(token=token)
-            except Project.DoesNotExist:
-                self.request.session.flush()
-                return redirect('login')
-
-        if self.member_data:
-            return super().get(request, *args, **kwargs)
-        else:
+    def get_queryset(self):
+        try:
+            self.user = self.request.user
+            self.project_list = Project.objects.get(user=self.user)
+            return self.project_list
+        except Project.DoesNotExist:
             return redirect('login')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['member_data'] = self.member_data
-        context['Project'] = Project.objects.get(token=self.token)
-        return context
-
-    def token_for_memberlist(self, token):
-        req_url = ('https://www.openhumans.org/api/direct-sharing/project/members/?access_token={}'.format(token))
-        req = requests.get(req_url)
-        if req.status_code == 200:
-            return req.json()
-        else:
-            messages.error(self.request, 'Token not valid. Maybe a fresh one is needed?')
-            return None
 
 
 class LoginView(FormView):
@@ -74,7 +42,7 @@ class LoginView(FormView):
             project_info['token'] = token
             Project.objects.update_or_create(id=project_info['id'], defaults=project_info)
             login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
-            self.request.session['master_access_token'] = token
+            return redirect('home')
         except Exception as e:
             # Handle expired master tokens, or serve error message
             if 'detail' in project_info:
@@ -82,4 +50,12 @@ class LoginView(FormView):
                                'Check your token in the project management interface.')
             else:
                 messages.error(self.request, e)
-        return redirect('home')
+            return redirect('login')
+
+
+class LogoutView(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        logout(self.request)
+        messages.info(self.request, 'You have been logged out!')
+        return redirect('login')

@@ -2,22 +2,21 @@
 
 {% block main_container %}
 
-<h1>Hello world.</h1>
+        <h1>Hello User: {{project_list.user}}</h1>
+            <table class="table">
 
+                <tr><td>Name</td><td>{{ project_list.name }}</td></tr>
+                <tr><td>Leader</td><td>{{ project_list.leader }}</td></tr>
+                <tr><td>Badge_Image</td><td>{{ project_list.badge_image }}</td></tr>
+                <tr><td>Contact_email</td><td>{{ project_list.contact_email }}</td></tr>
+                <tr><td>Info_Url</td><td>{{ project_list.info_url }}</td></tr>
+                <tr><td>Long_Description</td><td>{{ project_list.long_description }}</td></tr>
+                <tr><td>Organization</td><td>{{ project_list.organization }}</td></tr>
+                <tr><td>Short Description</td><td>{{ project_list.short_description }}</td></tr>
+                <tr><td>Slug</td><td>{{ project_list.slug }}</td></tr>
+                <tr><td>Type</td><td>{{ project_list.type }}</td></tr>
 
-<table class="table">
+            </table>
 
-    <tr><td>Name</td><td>{{ Project.name }}</td></tr>
-    <tr><td>Leader</td><td>{{ Project.leader }}</td></tr>
-    <tr><td>Badge_Image</td><td>{{ Project.badge_image }}</td></tr>
-    <tr><td>Contact_email</td><td>{{ Project.contact_email }}</td></tr>
-    <tr><td>Info_Url</td><td>{{ Project.info_url }}</td></tr>
-    <tr><td>Long_Description</td><td>{{ Project.long_description }}</td></tr>
-    <tr><td>Organization</td><td>{{ Project.organization }}</td></tr>
-    <tr><td>Short Description</td><td>{{ Project.short_description }}</td></tr>
-    <tr><td>Slug</td><td>{{ Project.slug }}</td></tr>
-    <tr><td>Type</td><td>{{ Project.type }}</td></tr>
-
-</table>
-
+        <a href="logout/">Logout</a>
 {% endblock main_container %}
