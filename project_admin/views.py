@@ -13,6 +13,11 @@ class HomeView(ListView):
     template_name = "project_admin/home.html"
     context_object_name = 'project_list'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page'] = 'home'
+        return context
+
     def get_queryset(self):
         try:
             self.user = self.request.user
@@ -27,29 +32,62 @@ class LoginView(FormView):
     form_class = TokenForm
     success_url = reverse_lazy('home')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page'] = 'login'
+        return context
+
     def form_valid(self, form):
         token = form.cleaned_data['token']
-        req_url = ('https://www.openhumans.org/api/direct-sharing/project/?access_token={}'.format(token))
-        params = {'token': token}
-        project_info = requests.get(req_url, params=params).json()
+        req_url = 'https://www.openhumans.org/api/' \
+                  'direct-sharing/project/?access_token={}'.format(token)
+        project_info = requests.get(req_url).json()
         try:
-            if not User.objects.filter(username=project_info['id_label'])\
-                    .exists():
-                user = User.objects.create_user(username=project_info['id_label'])
-            else:
-                user = User.objects.get(username=project_info['id_label'])
+            user = User.objects.get_or_create(username=
+                                              project_info['id_label'])[0]
             project_info['user'] = user
             project_info['token'] = token
-            Project.objects.update_or_create(id=project_info['id'], defaults=project_info)
-            login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+            Project.objects.update_or_create(id=project_info['id'],
+                                             defaults=project_info)
+            login(self.request, user,
+                  backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         except Exception as e:
             # Handle expired master tokens, or serve error message
             if 'detail' in project_info:
                 messages.error(self.request, project_info['detail'] +
-                               'Check your token in the project management interface.')
+                               ' Check your token in the'
+                               ' project management interface.', 'danger')
             else:
-                messages.error(self.request, e)
+                messages.error(self.request, e, 'danger')
+            return redirect('login')
+
+
+class MembersView(ListView):
+    template_name = 'project_admin/members.html'
+    context_object_name = 'members'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page'] = 'members'
+        return context
+
+    def get_queryset(self):
+        project_list = Project.objects.get(user=self.request.user)
+        token = project_list.token
+        req_url = 'https://www.openhumans.org/api/direct-sharing' \
+                  '/project/members/?access_token={}'.format(token)
+        member_info = requests.get(req_url).json()
+        try:
+            members = member_info['results']
+            return members
+        except Exception as e:
+            if 'detail' in member_info:
+                messages.error(self.request, member_info['detail'] +
+                               ' Check your token in the'
+                               ' project management interface.', 'danger')
+            else:
+                messages.error(self.request, e, 'danger')
             return redirect('login')
 
 
