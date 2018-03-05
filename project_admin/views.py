@@ -43,8 +43,9 @@ class LoginView(FormView):
                   'direct-sharing/project/?access_token={}'.format(token)
         project_info = requests.get(req_url).json()
         try:
-            user = User.objects.get_or_create(username=
-                                              project_info['id_label'])[0]
+            user = User.objects.get_or_create(
+                username=project_info['id_label']
+            )[0]
             project_info['user'] = user
             project_info['token'] = token
             Project.objects.update_or_create(id=project_info['id'],
