@@ -6,10 +6,10 @@
     <ul class="list-group">
       {% for member in members %}
         <li class="list-group-item" data-toggle="collapse"
-            data-target="#{{ member.username }}_info" role="button">
-          <h4>{{ member.username }}</h4>
+            data-target="#{{ member.uid }}_info" role="button">
+          <h4>{{ member.uid }}</h4>
         </li>
-        <div id="{{ member.username }}_info"
+        <div id="{{ member.uid }}_info"
              class="collapse well">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -26,11 +26,13 @@
                 </thead>
                 <tbody>
                 {% for file in member.data %}
-                  <td>{{ file.basename }}</td>
-                  <td>{{ file.source }}</td>
-                  <td>
-                    <a href="{{ file.download_url }}">Download</a>
-                  </td>
+                  <tr>
+                    <td>{{ file.basename }}</td>
+                    <td>{{ file.source }}</td>
+                    <td>
+                      <a href="{{ file.download_url }}">Download</a>
+                    </td>
+                  </tr>
                 {% endfor %}
                 </tbody>
               </table>

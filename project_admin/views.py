@@ -81,6 +81,8 @@ class MembersView(ListView):
         member_info = requests.get(req_url).json()
         try:
             members = member_info['results']
+            for member in members:
+                member['uid'] = member.get('username', member['project_member_id'])
             return members
         except Exception as e:
             if 'detail' in member_info:
