@@ -1,6 +1,6 @@
 # oh-proj-management
 
-[![Build Status](https://travis-ci.org/OpenHumans/oh-proj-management.svg?branch=master)](https://travis-ci.org/OpenHumans/oh-proj-management)
+[![Build Status](https://travis-ci.org/OpenHumans/oh-proj-management.svg?branch=master)](https://travis-ci.org/OpenHumans/oh-proj-management) [![Maintainability](https://api.codeclimate.com/v1/badges/575d24a8ebf4170ee90e/maintainability)](https://codeclimate.com/github/OpenHumans/oh-proj-management/maintainability)
 
 Web app which Open Humans projects can use to view and work with their members and data.
 
