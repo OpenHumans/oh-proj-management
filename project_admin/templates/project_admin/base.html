@@ -33,15 +33,53 @@
 
   <body>
 
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'home' %}">Open Humans Project Management</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar">
+          <ul class="nav navbar-nav navbar-right">
+          {% if request.user.is_authenticated %}
+            <li class="{% if page == 'home' %}active{% endif %}">
+              <a href="{% url 'home' %}">Project Details</a>
+            </li>
+            <li class="{% if page == 'members' %}active{% endif %}">
+              <a href="{% url 'members' %}">Member Details</a>
+            </li>
+            <li>
+              <a href="{% url 'logout' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="{% if page == 'login' %}active{% endif %}">
+              <a href="{% url 'login' %}">Login</a>
+            </li>
+          {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
     <div class="container">
 
       {% if messages %}
         <div class="row">
           {% for message in messages %}
-          <div{% if message.tags %} class="message {{ message.tags }}"{% endif %}>
-            {{ message }}</div>
+          <div class="alert alert-{{ message.tags }}">
+            <span>{{ message }}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
           {% endfor %}
-        </ul>
+        </div>
       {% endif %}
 
       {% block main_container %}

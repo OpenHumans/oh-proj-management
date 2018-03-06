@@ -2,21 +2,57 @@
 
 {% block main_container %}
 
-        <h1>Hello User: {{project_list.user}}</h1>
-            <table class="table">
+  <h1>Hello User: {{project_list.user}}</h1>
 
-                <tr><td>Name</td><td>{{ project_list.name }}</td></tr>
-                <tr><td>Leader</td><td>{{ project_list.leader }}</td></tr>
-                <tr><td>Badge_Image</td><td>{{ project_list.badge_image }}</td></tr>
-                <tr><td>Contact_email</td><td>{{ project_list.contact_email }}</td></tr>
-                <tr><td>Info_Url</td><td>{{ project_list.info_url }}</td></tr>
-                <tr><td>Long_Description</td><td>{{ project_list.long_description }}</td></tr>
-                <tr><td>Organization</td><td>{{ project_list.organization }}</td></tr>
-                <tr><td>Short Description</td><td>{{ project_list.short_description }}</td></tr>
-                <tr><td>Slug</td><td>{{ project_list.slug }}</td></tr>
-                <tr><td>Type</td><td>{{ project_list.type }}</td></tr>
+  <table class="table table-hover">
+    <tr>
+      <th>Name</th>
+      <td>{{ project_list.name }}</td>
+    </tr>
+    <tr>
+      <th>Leader</th>
+      <td>{{ project_list.leader }}</td>
+    </tr>
+    <tr>
+      <th>Badge Image</th>
+      <td>
+        <a href="{{ project_list.badge_image }}" target="_blank">
+          {{ project_list.badge_image }}
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <th>Contact E-mail</th>
+      <td>
+        <a href="mailto:{{ project_list.contact_email }}">
+          {{ project_list.contact_email }}
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <th>Info URL</th>
+      <td>{{ project_list.info_url }}</td>
+    </tr>
+    <tr>
+      <th>Long Description</th>
+      <td>{{ project_list.long_description }}</td>
+    </tr>
+    <tr>
+      <th>Organization</th>
+      <td>{{ project_list.organization }}</td>
+    </tr>
+    <tr>
+      <th>Short Description</th>
+      <td>{{ project_list.short_description }}</td>
+    </tr>
+    <tr>
+      <th>Slug</th>
+      <td>{{ project_list.slug }}</td>
+    </tr>
+    <tr>
+      <th>Type</th>
+      <td>{{ project_list.type }}</td>
+    </tr>
+  </table>
 
-            </table>
-
-        <a href="logout/">Logout</a>
 {% endblock main_container %}

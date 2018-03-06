@@ -2,10 +2,12 @@
 
 {% block main_container %}
 
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Log in" />
-</form>
+  <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div class="text-center">
+        <input type="submit" value="Log in" class="btn btn-success"/>
+      </div>
+  </form>
 
 {% endblock main_container %}
