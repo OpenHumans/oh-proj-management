@@ -16,9 +16,13 @@
     <tr>
       <th>Badge Image</th>
       <td>
+        {% if project_list.badge_image is not None %}
         <a href="{{ project_list.badge_image }}" target="_blank">
           {{ project_list.badge_image }}
         </a>
+        {% else %}
+          <i>No project badge image was set</i>
+        {% endif %}
       </td>
     </tr>
     <tr>
