@@ -32,10 +32,10 @@ class LoginView(FormView):
     form_class = TokenForm
     success_url = reverse_lazy('home')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['page'] = 'login'
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['page'] = 'login'
+    #     return context
 
     def form_valid(self, form):
         token = form.cleaned_data['token']
@@ -82,7 +82,8 @@ class MembersView(ListView):
         try:
             members = member_info['results']
             for member in members:
-                member['uid'] = member.get('username', member['project_member_id'])
+                member['uid'] = member.get(
+                    'username', member['project_member_id'])
             return members
         except Exception as e:
             if 'detail' in member_info:

@@ -7,7 +7,7 @@ name = "pypi"
 
 [dev-packages]
 
-flake8 = "*"
+"flake8" = "*"
 coverage = "*"
 
 
@@ -17,16 +17,17 @@ certifi = "*"
 chardet = "*"
 configparser = "*"
 dj-database-url = "*"
-Django = "*"
+django = "*"
 env-tools = "*"
 gunicorn = "*"
 idna = "*"
-psycopg2 = "*"
+"psycopg2" = "*"
 pytz = "*"
 requests = "*"
 tini = "*"
-urllib3 = "*"
+"urllib3" = "*"
 whitenoise = "*"
+requests-mock = "*"
 
 
 [requires]
