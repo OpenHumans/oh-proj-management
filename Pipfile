@@ -9,6 +9,7 @@ name = "pypi"
 
 "flake8" = "*"
 coverage = "*"
+requests-mock = "*"
 
 
 [packages]

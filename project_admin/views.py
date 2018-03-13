@@ -32,10 +32,10 @@ class LoginView(FormView):
     form_class = TokenForm
     success_url = reverse_lazy('home')
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['page'] = 'login'
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page'] = 'login'
+        return context
 
     def form_valid(self, form):
         token = form.cleaned_data['token']
