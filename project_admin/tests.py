@@ -11,7 +11,7 @@ class ProjectTest(TestCase):
             self.token)
 
     @vcr.use_cassette('members.yml')
-    def test_stupid_request(self):
+    def test_members_request(self):
         """memebers list API"""
         response = requests.get(self.url)
         self.assertEqual(response.status_code, 200)
