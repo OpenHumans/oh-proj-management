@@ -1,0 +1,33 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://www.openhumans.org/api/direct-sharing/project/?access_token=XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQhvpEP
+  response:
+    body: {string: '{"active":true,"approved":false,"authorized_members":1,"badge_image":"https://open-humans-production.s3.amazonaws.com/direct-sharing/badges/None/pet-badge.png","contact_email":"support@openhumans.org","id":12,"id_label":"direct-sharing-12","info_url":"https://www.example.com","is_academic_or_nonprofit":true,"is_study":false,"leader":"Mad
+        Price Ball","long_description":"NOT A REAL PROJECT. This project is set up
+        to serve as an example project for requesting and receiving data from members.
+        Please don''t join this project unless you''re interested in your account
+        being used for demo purposes and have been invited to do so.","name":"Example
+        Project: Data Access","organization":"Open Humans","request_message_permission":false,"request_sources_access":[],"request_username_access":false,"returned_data_description":"","short_description":"An
+        example project demonstrating how to retrieve data from member accounts.","slug":"example-project-data-access","type":"on-site"}'}
+    headers:
+      Allow: ['GET, HEAD, OPTIONS']
+      Cache-Control: ['no-cache, max-age=0, must-revalidate, no-store']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Thu, 15 Mar 2018 18:30:47 GMT']
+      Expires: ['Thu, 15 Mar 2018 18:30:47 GMT']
+      Last-Modified: ['Thu, 15 Mar 2018 18:30:47 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1
