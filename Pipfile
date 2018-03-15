@@ -9,7 +9,8 @@ name = "pypi"
 
 "flake8" = "*"
 coverage = "*"
-requests-mock = "*"
+vcrpy = "*"
+
 
 
 [packages]
@@ -28,8 +29,6 @@ requests = "*"
 tini = "*"
 "urllib3" = "*"
 whitenoise = "*"
-requests-mock = "*"
-
 
 [requires]
 
