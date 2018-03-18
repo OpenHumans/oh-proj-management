@@ -18,7 +18,7 @@ class LoginTest(TestCase):
         request_url = self.project_info_url.format(self.invalid_token)
         response = requests.get(request_url)
         self.assertEqual(response.status_code, 401)
-        
+
     @my_vcr.use_cassette()
     def test_valid_token(self):
         request_url = self.project_info_url.format(self.master_token)
