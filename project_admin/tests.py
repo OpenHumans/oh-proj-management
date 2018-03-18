@@ -11,19 +11,18 @@ class LoginTest(TestCase):
     def setUp(self):
         self.invalid_token = 'INVALID_TOKEN'
         self.master_token = 'XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQhvpEP'
+        self.project_info_url = 'https://www.openhumans.org/api/direct-sharing/project/?access_token={}'
 
     @my_vcr.use_cassette()
     def test_invalid_token(self):
-        project_info_url = ('https://www.openhumans.org/api/direct-sharing/project/?access_token={}'
-                            .format(self.invalid_token))
-        response = requests.get(project_info_url)
+        request_url = self.project_info_url.format(self.invalid_token)
+        response = requests.get(request_url)
         self.assertEqual(response.status_code, 401)
-
+        
     @my_vcr.use_cassette()
     def test_valid_token(self):
-        project_info_url = ('https://www.openhumans.org/api/direct-sharing/project/?access_token={}'
-                            .format(self.master_token))
-        response = requests.get(project_info_url)
+        request_url = self.project_info_url.format(self.master_token)
+        response = requests.get(request_url)
         self.assertEqual(response.status_code, 200)
 
     def test_login_success(self):

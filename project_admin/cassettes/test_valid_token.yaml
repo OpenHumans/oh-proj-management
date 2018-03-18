@@ -18,13 +18,13 @@ interactions:
         example project demonstrating how to retrieve data from member accounts.","slug":"example-project-data-access","type":"on-site"}'}
     headers:
       Allow: ['GET, HEAD, OPTIONS']
-      Cache-Control: ['no-store, max-age=0, must-revalidate, no-cache']
+      Cache-Control: ['no-store, no-cache, max-age=0, must-revalidate']
       Connection: [close]
       Content-Language: [en]
       Content-Type: [application/json]
-      Date: ['Sun, 18 Mar 2018 19:09:22 GMT']
-      Expires: ['Sun, 18 Mar 2018 19:09:22 GMT']
-      Last-Modified: ['Sun, 18 Mar 2018 19:09:22 GMT']
+      Date: ['Sun, 18 Mar 2018 19:25:27 GMT']
+      Expires: ['Sun, 18 Mar 2018 19:25:28 GMT']
+      Last-Modified: ['Sun, 18 Mar 2018 19:25:28 GMT']
       Server: [Cowboy]
       Vary: ['Accept, Accept-Language, Cookie']
       Via: [1.1 vegur]
