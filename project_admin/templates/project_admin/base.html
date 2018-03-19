@@ -17,9 +17,7 @@
 
     <!-- Bootstrap via CDN. -->
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Local CSS overrides -->
     <link href="{% static "oh_proj_management/main.css" %}" rel="stylesheet">
@@ -33,48 +31,43 @@
 
   <body>
 
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="{% url 'home' %}">Open Humans Project Management</a>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{% url 'home' %}">
+        Open Humans Project Management
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <div class="collapse navbar-collapse" id="navbar">
-          <ul class="nav navbar-nav navbar-right">
+      <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav ml-auto">
           {% if request.user.is_authenticated %}
-            <li class="{% if page == 'home' %}active{% endif %}">
-              <a href="{% url 'home' %}">Project Details</a>
+            <li class="nav-item {% if page == 'home' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'home' %}">Project Details</a>
             </li>
-            <li class="{% if page == 'members' %}active{% endif %}">
-              <a href="{% url 'members' %}">Member Details</a>
+            <li class="nav-item {% if page == 'members' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'members' %}">Member Details</a>
             </li>
             <li>
-              <a href="{% url 'logout' %}">Logout</a>
+              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
           {% else %}
-            <li class="{% if page == 'login' %}active{% endif %}">
-              <a href="{% url 'login' %}">Login</a>
+            <li class="nav-item {% if page == 'login' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
             </li>
           {% endif %}
-          </ul>
-        </div>
+        </ul>
       </div>
     </nav>
 
-    <div class="container">
+    <div class="container my-5">
 
       {% if messages %}
         <div class="row">
           {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show w-100">
             <span>{{ message }}</span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -96,11 +89,11 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Latest compiled and minified JavaScript via WaxCDN -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- jQuery and Popper.js (necessary for Bootstrap's JS plugins) -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+-    <!-- Latest compiled and minified JavaScript via MaxCDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-- Local JavaScript -->
     <script src="{% static "oh_proj_management/main.js" %}"></script>
   </body>
