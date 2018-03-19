@@ -2,6 +2,7 @@ from django.test import TestCase
 import vcr
 import requests
 from django.urls import reverse
+from django.conf import settings
 
 my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'), cassette_library_dir='project_admin/cassettes')
 
@@ -9,6 +10,7 @@ my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'), cassette_libra
 class LoginTest(TestCase):
 
     def setUp(self):
+        settings.DEBUG = True
         self.invalid_token = 'INVALID_TOKEN'
         self.master_token = 'XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQhvpEP'
         self.project_info_url = 'https://www.openhumans.org/api/direct-sharing/project/?access_token={}'
