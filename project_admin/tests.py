@@ -1,11 +1,10 @@
-from django.test import TestCase, Client, override_settings
-from django.contrib.auth.models import Permission, User
+from django.test import TestCase, override_settings
+from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import Project
 
 
-@override_settings(AUTHENTICATION_BACKENDS=
-                   ('django.contrib.auth.backends.ModelBackend',))
+@override_settings(AUTHENTICATION_BACKENDS=('django.contrib.auth.backends.ModelBackend',))
 class HomeViewTest(TestCase):
 
     @classmethod
@@ -32,24 +31,21 @@ class HomeViewTest(TestCase):
             "token": "XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQ"
         }
 
-        self.test_user = User.objects.create_user(username="test",password='12')
+        self.test_user = User.objects.create_user(username="test", password='12')
         kwargs['user'] = self.test_user
         self.project = Project.objects.create(**kwargs)
 
     def test_home_with_login(self):
         self.client.force_login(self.test_user)
         resp = self.client.get(reverse('home'))
-        self.assertEquals(resp.context_data['project_list'], self.project )
+        self.assertEquals(resp.context_data['project_list'], self.project)
         self.assertTemplateUsed(resp, 'project_admin/home.html')
 
     def test_home_with_login_unknown_user(self):
-        self.client.login(username = "unknown_test_user", password="unknown")
+        self.client.login(username="unknown_test_user", password="unknown")
         resp = self.client.get(reverse('home'))
         self.assertRedirects(resp, '/login/?next=/')
 
     def test_home_without_login(self):
         resp = self.client.get(reverse('home'))
         self.assertRedirects(resp, '/login/?next=/')
-
-
-
