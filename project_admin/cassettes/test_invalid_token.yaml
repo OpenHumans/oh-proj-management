@@ -1,0 +1,28 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://www.openhumans.org/api/direct-sharing/project/?access_token=INVALID_TOKEN
+  response:
+    body: {string: '{"detail":"Invalid token."}'}
+    headers:
+      Allow: ['GET, HEAD, OPTIONS']
+      Cache-Control: ['no-store, no-cache, max-age=0, must-revalidate']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Sun, 18 Mar 2018 19:25:23 GMT']
+      Expires: ['Sun, 18 Mar 2018 19:25:24 GMT']
+      Last-Modified: ['Sun, 18 Mar 2018 19:25:24 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      Www-Authenticate: [Bearer realm="api"]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 401, message: Unauthorized}
+version: 1
