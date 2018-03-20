@@ -5,59 +5,237 @@
   <div class="row">
     <div class="col-lg-4 mb-3">
       <div class="list-group">
-      {% for member in members %}
-        <a class="list-group-item list-group-item-action" data-toggle="list" href="#{{ member.uid }}_info" role="tab">
-          {{ member.uid }}
-          <span class="badge badge-primary badge-pill float-right">
-            {{ member.data | length }}
+
+        <a class="list-group-item list-group-item-action bg-info text-white mb-3" data-toggle="list" href="#newgroup" role="tab">
+          Create a new group
+        </a>
+
+        {% for group in groups %}
+          <a class="list-group-item list-group-item-action" data-toggle="list" href="#{{ group.pk }}_info" role="tab">
+            {{ group.name }}
+            <span class="badge badge-primary badge-pill float-right">
+            {{ group.projectmember_set.all | length }}
+          </span>
+          </a>
+        {% endfor %}
+
+        <a class="list-group-item list-group-item-action bg-secondary text-white mt-3" data-toggle="list" href="#ungrouped" role="tab">
+          Ungrouped Members
+          <span class="badge badge-light badge-pill float-right">
+            {{ ungrouped | length }}
           </span>
         </a>
-      {% endfor %}
       </div>
     </div>
+
     <div class="col-lg-8">
       <div class="tab-content">
-      {% for member in members %}
-        <div id="{{ member.uid }}_info" class="tab-pane fade" role="tabpanel">
+
+        <div id="newgroup" class="tab-pane" role="tabpanel">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">
-                Data Shared
-              </h5>
-              {% if member.data|length > 0 %}
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th style="width: 60%">Name</th>
-                      <th style="width: 20%">Source</th>
-                      <th style="width: 20%">URL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {% for file in member.data %}
-                    <tr>
-                      <td>{{ file.basename }}</td>
-                      <td>{{ file.source }}</td>
-                      <td>
-                        <a href="{{ file.download_url }}">Download</a>
-                      </td>
-                    </tr>
+              <h3 class="card-title mb-4">
+                Create a new group
+              </h3>
+              <form action="{% url 'create_group' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="group_name">Name</label>
+                  <input type="text" class="form-control" name="group_name" id="group_name" required>
+                </div>
+                <div class="form-group">
+                  <label for="selected_members">Members</label>
+                  <select class="custom-select" name="selected_members" id="selected_members" multiple>
+                    {% for member in members %}
+                      <option value={{ member.id }}>
+                        {% firstof member.username member.id %} - {% firstof member.group.name 'Ungrouped' %}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                </div>
+                <button type="submit" class="btn btn-info float-right">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {% for group in groups %}
+          <div id="{{ group.pk }}_info" class="tab-pane" role="tabpanel">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title mb-4">
+                  {{ group.name }}
+                </h3>
+                <div class="list-group">
+                  {% for member in group.projectmember_set.all %}
+                    <div class="mb-3">
+                      <a class="list-group-item bg-info text-white" data-toggle="collapse"
+                         href="#{{ member.id }}_info" role="button">
+                        <h5>{% firstof member.username member.id %}</h5>
+                      </a>
+                      <div class="collapse" id="{{ member.id }}_info">
+                        <div class="card">
+                          <div class="card-body">
+                            <section>
+                              <h5 class="card-title">Data Shared</h5>
+                              {% if member.file_set.all|length > 0 %}
+                                <table class="table table-hover">
+                                  <thead>
+                                  <tr>
+                                    <th style="width: 60%">Name</th>
+                                    <th style="width: 20%">Source</th>
+                                    <th style="width: 20%">URL</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  {% for file in member.file_set.all %}
+                                    <tr>
+                                      <td>{{ file.basename }}</td>
+                                      <td>{{ file.source }}</td>
+                                      <td>
+                                        <a href="{{ file.download_url }}">Download</a>
+                                      </td>
+                                    </tr>
+                                  {% endfor %}
+                                  </tbody>
+                                </table>
+                              {% else %}
+                                <div class="row">
+                                  <div class="w-100 text-center">
+                                    <span>This user has not shared any files yet</span>
+                                  </div>
+                                </div>
+                              {% endif %}
+                            </section>
+                            <section class="text-center">
+                              <a class="btn btn-sm bg-white border border-danger text-danger" href="{% url 'remove_member' member.id %}">
+                                Remove member from group
+                              </a>
+                            </section>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   {% endfor %}
-                  </tbody>
-                </table>
+
+                  <!-- Add member to group -->
+                  <div class="mb-1">
+                    <a class="list-group-item border border-info text-info text-right" data-toggle="collapse"
+                       href="#addmember_to_{{ group.pk }}" role="button">
+                      Add members to group
+                    </a>
+                    <div class="collapse" id="addmember_to_{{ group.pk }}">
+                      <div class="card">
+                        <div class="card-body">
+                          <form action="{% url 'add_members' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="group_pk" value={{ group.pk }}>
+                            <div class="form-group">
+                              <label for="selected_members">Members</label>
+                              <select class="custom-select" name="selected_members" id="selected_members" multiple>
+                                {% for member in members %}
+                                  {% if member.group != group %}
+                                    <option value={{ member.id }}>
+                                      {% firstof member.username member.id %} - {% firstof member.group.name 'Ungrouped' %}
+                                    </option>
+                                  {% endif %}
+                                {% endfor %}
+                              </select>
+                              <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                            </div>
+                            <button type="submit" class="btn btn-info float-right">Submit</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Add member to group -->
+
+                  <!-- Delete group -->
+                  <div class="mb-1">
+                    <a class="list-group-item border border-danger text-danger text-right"
+                       href="{% url 'delete_group' group.pk %}">
+                      Delete group
+                    </a>
+                  </div>
+                  <!-- Delete group -->
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+        <div id="ungrouped" class="tab-pane" role="tabpanel">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title mb-4">
+                Ungrouped Members
+              </h3>
+              {% if ungrouped.all|length > 0 %}
+                <div class="list-group">
+                  {% for member in ungrouped.all %}
+                    <div class="mb-3">
+                      <a class="list-group-item bg-info text-white" data-toggle="collapse"
+                         href="#{{ member.id }}_info" role="button">
+                        <h5>{% firstof member.username member.id %}</h5>
+                      </a>
+                      <div class="collapse" id="{{ member.id }}_info">
+                        <div class="card">
+                          <div class="card-body">
+                            <section>
+                              <h5 class="card-title">Data Shared</h5>
+                              {% if member.file_set.all|length > 0 %}
+                                <table class="table table-hover">
+                                  <thead>
+                                  <tr>
+                                    <th style="width: 60%">Name</th>
+                                    <th style="width: 20%">Source</th>
+                                    <th style="width: 20%">URL</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  {% for file in member.file_set.all %}
+                                    <tr>
+                                      <td>{{ file.basename }}</td>
+                                      <td>{{ file.source }}</td>
+                                      <td>
+                                        <a href="{{ file.download_url }}">Download</a>
+                                      </td>
+                                    </tr>
+                                  {% endfor %}
+                                  </tbody>
+                                </table>
+                              {% else %}
+                                <div class="row">
+                                  <div class="w-100 text-center">
+                                    <p>This user has not shared any files yet</p>
+                                  </div>
+                                </div>
+                              {% endif %}
+                            </section>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
               {% else %}
                 <div class="row">
                   <div class="w-100 text-center">
-                    <p>This user has not shared any files yet</p>
+                    <span>There are no ungrouped members</span>
                   </div>
                 </div>
               {% endif %}
             </div>
           </div>
         </div>
-      {% endfor %}
+
       </div>
     </div>
+
   </div>
 
 {% endblock main_container %}

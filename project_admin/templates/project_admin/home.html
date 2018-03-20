@@ -2,23 +2,23 @@
 
 {% block main_container %}
 
-  <h1>Hello User: {{project_list.user}}</h1>
+  <h1>Hello User: {{project.user}}</h1>
 
   <table class="table table-hover">
     <tr>
       <th>Name</th>
-      <td>{{ project_list.name }}</td>
+      <td>{{ project.name }}</td>
     </tr>
     <tr>
       <th>Leader</th>
-      <td>{{ project_list.leader }}</td>
+      <td>{{ project.leader }}</td>
     </tr>
     <tr>
       <th>Badge Image</th>
       <td>
-        {% if project_list.badge_image is not None %}
-        <a href="{{ project_list.badge_image }}" target="_blank">
-          {{ project_list.badge_image }}
+        {% if project.badge_image is not None %}
+        <a href="{{ project.badge_image }}" target="_blank">
+          {{ project.badge_image }}
         </a>
         {% else %}
           <i>No project badge image was set</i>
@@ -28,34 +28,34 @@
     <tr>
       <th>Contact E-mail</th>
       <td>
-        <a href="mailto:{{ project_list.contact_email }}">
-          {{ project_list.contact_email }}
+        <a href="mailto:{{ project.contact_email }}">
+          {{ project.contact_email }}
         </a>
       </td>
     </tr>
     <tr>
       <th>Info URL</th>
-      <td>{{ project_list.info_url }}</td>
+      <td>{{ project.info_url }}</td>
     </tr>
     <tr>
       <th>Long Description</th>
-      <td>{{ project_list.long_description }}</td>
+      <td>{{ project.long_description }}</td>
     </tr>
     <tr>
       <th>Organization</th>
-      <td>{{ project_list.organization }}</td>
+      <td>{{ project.organization }}</td>
     </tr>
     <tr>
       <th>Short Description</th>
-      <td>{{ project_list.short_description }}</td>
+      <td>{{ project.short_description }}</td>
     </tr>
     <tr>
       <th>Slug</th>
-      <td>{{ project_list.slug }}</td>
+      <td>{{ project.slug }}</td>
     </tr>
     <tr>
       <th>Type</th>
-      <td>{{ project_list.type }}</td>
+      <td>{{ project.type }}</td>
     </tr>
   </table>
 

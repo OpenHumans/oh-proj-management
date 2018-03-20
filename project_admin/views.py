@@ -1,4 +1,6 @@
+import dateutil.parser
 import requests
+from django.db.models import Q
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -11,7 +13,7 @@ from .models import Project
 
 class HomeView(ListView):
     template_name = "project_admin/home.html"
-    context_object_name = 'project_list'
+    context_object_name = 'project'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -20,9 +22,7 @@ class HomeView(ListView):
 
     def get_queryset(self):
         try:
-            self.user = self.request.user
-            self.project_list = Project.objects.get(user=self.user)
-            return self.project_list
+            return Project.objects.get(user=self.request.user)
         except Project.DoesNotExist:
             return redirect('login')
 
@@ -64,26 +64,39 @@ class LoginView(FormView):
             return redirect('login')
 
 
-class MembersView(ListView):
+class MembersView(TemplateView):
     template_name = 'project_admin/members.html'
-    context_object_name = 'members'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['page'] = 'members'
-        return context
-
-    def get_queryset(self):
-        project_list = Project.objects.get(user=self.request.user)
-        token = project_list.token
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        project = Project.objects.get(user=self.request.user)
+        token = project.token
         req_url = 'https://www.openhumans.org/api/direct-sharing' \
                   '/project/members/?access_token={}'.format(token)
         member_info = requests.get(req_url).json()
         try:
             members = member_info['results']
+            project.projectmember_set.filter(
+                ~Q(id__in=map(lambda x: int(x['project_member_id']), members))
+            ).delete()
             for member in members:
-                member['uid'] = member.get('username', member['project_member_id'])
-            return members
+                [m, _] = project.projectmember_set.get_or_create(id=int(member['project_member_id']),
+                                                                 username=member.get('username'),
+                                                                 date_joined=dateutil.parser.parse(member['created']))
+                for file in member['data']:
+                    project.file_set.update_or_create(id=file['id'],
+                                                      basename=file['basename'],
+                                                      created=dateutil.parser.parse(file['created']),
+                                                      source=file['source'],
+                                                      member=m,
+                                                      defaults={
+                                                          'download_url': file['download_url'],
+                                                      })
+            context.update({'page': 'members',
+                            'members': project.projectmember_set.all(),
+                            'groups': project.projectgroup_set.all(),
+                            'ungrouped': project.projectmember_set.filter(group=None)})
+            return self.render_to_response(context)
         except Exception as e:
             if 'detail' in member_info:
                 messages.error(self.request, member_info['detail'] +
@@ -100,3 +113,43 @@ class LogoutView(TemplateView):
         logout(self.request)
         messages.info(self.request, 'You have been logged out!')
         return redirect('login')
+
+
+def create_group(request):
+    project = Project.objects.get(user=request.user)
+    project.projectmember_set.filter(
+        id__in=request.POST.getlist('selected_members')
+    ).update(
+        group=project.projectgroup_set.create(
+            name=request.POST.get('group_name'),
+        )
+    )
+    return redirect('members')
+
+
+def delete_group(request, group_pk):
+    project = Project.objects.get(user=request.user)
+    project.projectgroup_set.get(pk=group_pk).delete()
+    return redirect('members')
+
+
+def add_members(request):
+    project = Project.objects.get(user=request.user)
+    project.projectmember_set.filter(
+        id__in=request.POST.getlist('selected_members')
+    ).update(
+        group=project.projectgroup_set.get(
+            pk=request.POST.get('group_pk')
+        )
+    )
+    return redirect('members')
+
+
+def remove_member(request, member_id):
+    project = Project.objects.get(user=request.user)
+    project.projectmember_set.filter(
+        id=member_id
+    ).update(
+        group=None
+    )
+    return redirect('members')
