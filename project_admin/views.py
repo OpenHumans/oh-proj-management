@@ -8,7 +8,7 @@ from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from .forms import TokenForm
-from .models import Project
+from .models import Project, ProjectMember
 
 
 class HomeView(ListView):
@@ -94,8 +94,7 @@ class MembersView(TemplateView):
                                                       })
             context.update({'page': 'members',
                             'members': project.projectmember_set.all(),
-                            'groups': project.projectgroup_set.all(),
-                            'ungrouped': project.projectmember_set.filter(group=None)})
+                            'groups': project.projectgroup_set.all()})
             return self.render_to_response(context)
         except Exception as e:
             if 'detail' in member_info:
@@ -117,13 +116,27 @@ class LogoutView(TemplateView):
 
 def create_group(request):
     project = Project.objects.get(user=request.user)
-    project.projectmember_set.filter(
-        id__in=request.POST.getlist('selected_members')
-    ).update(
-        group=project.projectgroup_set.create(
-            name=request.POST.get('group_name'),
-        )
+    group = project.projectgroup_set.create(
+        name=request.POST.get('new_group_name'),
+        description=request.POST.get('new_group_description')
     )
+    through_model = ProjectMember.groups.through
+    through_model.objects.bulk_create([
+        through_model(projectgroup=group, projectmember=member)
+        for member in project.projectmember_set.filter(
+            id__in=request.POST.getlist('selected_members')
+        )
+    ])
+    return redirect('members')
+
+
+def update_group(request, group_pk):
+    project = Project.objects.get(user=request.user)
+    group = project.projectgroup_set.get(pk=group_pk)
+    group.name = request.POST.get('group_{}_name'.format(group_pk))
+    group.description = request.POST.get('group_{}_description'
+                                         .format(group_pk))
+    group.save()
     return redirect('members')
 
 
@@ -135,21 +148,23 @@ def delete_group(request, group_pk):
 
 def add_members(request):
     project = Project.objects.get(user=request.user)
-    project.projectmember_set.filter(
-        id__in=request.POST.getlist('selected_members')
-    ).update(
-        group=project.projectgroup_set.get(
-            pk=request.POST.get('group_pk')
+    group = project.projectgroup_set.get(pk=request.POST.get('group_pk'))
+    through_model = ProjectMember.groups.through
+    through_model.objects.bulk_create([
+        through_model(projectgroup=group, projectmember=member)
+        for member in project.projectmember_set.filter(
+            id__in=request.POST.getlist('selected_members')
         )
-    )
+    ])
     return redirect('members')
 
 
-def remove_member(request, member_id):
+def remove_member(request, group_id, member_id):
     project = Project.objects.get(user=request.user)
-    project.projectmember_set.filter(
-        id=member_id
-    ).update(
-        group=None
-    )
+    group = project.projectgroup_set.get(pk=group_id)
+    member = project.projectmember_set.get(id=member_id)
+    through_model = ProjectMember.groups.through
+    through_model.objects.filter(
+        projectgroup=group, projectmember=member
+    ).delete()
     return redirect('members')

@@ -30,6 +30,7 @@ class Project(models.Model):
 
 class ProjectGroup(models.Model):
     name = models.CharField(max_length=50)
+    description = models.TextField(default='')
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 
@@ -38,8 +39,7 @@ class ProjectMember(models.Model):
     username = models.CharField(max_length=50, null=True)
     date_joined = models.DateTimeField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    group = models.ForeignKey(ProjectGroup, null=True,
-                              on_delete=models.SET_NULL)
+    groups = models.ManyToManyField(ProjectGroup)
 
 
 class File(models.Model):
