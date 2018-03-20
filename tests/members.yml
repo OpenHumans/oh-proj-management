@@ -1,0 +1,27 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://www.openhumans.org/api/direct-sharing/project/members/?access_token=XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQhvpEP
+  response:
+    body: {string: '{"count":1,"next":null,"previous":null,"results":[{"created":"2016-05-19T22:16:39.842587Z","project_member_id":"07876706","message_permission":false,"sources_shared":["direct-sharing-11"],"data":[]}]}'}
+    headers:
+      Allow: ['GET, HEAD, OPTIONS']
+      Cache-Control: ['must-revalidate, no-store, no-cache, max-age=0']
+      Connection: [close]
+      Content-Language: [en]
+      Content-Type: [application/json]
+      Date: ['Tue, 20 Mar 2018 05:42:48 GMT']
+      Expires: ['Tue, 20 Mar 2018 05:42:48 GMT']
+      Last-Modified: ['Tue, 20 Mar 2018 05:42:48 GMT']
+      Server: [Cowboy]
+      Vary: ['Accept, Accept-Language, Cookie']
+      Via: [1.1 vegur]
+      X-Frame-Options: [SAMEORIGIN]
+    status: {code: 200, message: OK}
+version: 1
