@@ -53,4 +53,3 @@ class LoginTest(TestCase):
         self.assertContains(response, "Check your token in the project management interface")
         self.assertTemplateUsed(response, 'project_admin/login.html')
         self.assertRedirects(response, '/login/')
-
