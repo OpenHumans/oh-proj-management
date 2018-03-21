@@ -7,7 +7,7 @@ class Project(models.Model):
     active = models.BooleanField()
     approved = models.BooleanField()
     authorized_members = models.IntegerField()
-    badge_image = models.URLField(max_length=200, blank=True)
+    badge_image = models.URLField(max_length=200, blank=True, null=True)
     contact_email = models.EmailField(max_length=200)
     id = models.AutoField(primary_key=True)
     id_label = models.CharField(max_length=50)
