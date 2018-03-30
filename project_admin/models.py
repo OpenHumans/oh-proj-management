@@ -26,3 +26,27 @@ class Project(models.Model):
     slug = models.SlugField(max_length=50)
     type = models.CharField(max_length=50)
     token = models.CharField(max_length=50)
+
+
+class ProjectGroup(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField(default='')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+
+class ProjectMember(models.Model):
+    id = models.IntegerField(primary_key=True)
+    username = models.CharField(max_length=50, null=True)
+    date_joined = models.DateTimeField()
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    groups = models.ManyToManyField(ProjectGroup)
+
+
+class File(models.Model):
+    id = models.IntegerField(primary_key=True)
+    basename = models.CharField(max_length=200)
+    created = models.DateTimeField()
+    download_url = models.URLField(max_length=200)
+    source = models.CharField(max_length=50)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    member = models.ForeignKey(ProjectMember, on_delete=models.CASCADE)

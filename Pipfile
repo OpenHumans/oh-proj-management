@@ -28,6 +28,7 @@ requests = "*"
 tini = "*"
 "urllib3" = "*"
 whitenoise = "*"
+python-dateutil = "*"
 
 
 [requires]
