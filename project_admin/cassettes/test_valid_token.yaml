@@ -7,7 +7,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.18.4]
     method: GET
-    uri: https://www.openhumans.org/api/direct-sharing/project/?access_token=XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQhvpEP
+    uri: https://www.openhumans.org/api/direct-sharing/project/?access_token=ACCESSTOKEN
   response:
     body: {string: '{"active":true,"approved":false,"authorized_members":1,"badge_image":"https://open-humans-production.s3.amazonaws.com/direct-sharing/badges/None/pet-badge.png","contact_email":"support@openhumans.org","id":12,"id_label":"direct-sharing-12","info_url":"https://www.example.com","is_academic_or_nonprofit":true,"is_study":false,"leader":"Mad
         Price Ball","long_description":"NOT A REAL PROJECT. This project is set up
