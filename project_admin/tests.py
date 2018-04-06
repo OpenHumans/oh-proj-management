@@ -4,21 +4,26 @@ import requests
 from django.urls import reverse
 from django.conf import settings
 
+FILTERSET = [('access_token', 'ACCESSTOKEN')]
+
+my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'), 
+                 cassette_library_dir='project_admin/cassettes',
+                 filter_headers=[('Authorization', 'XXXXXXXX')],
+                 filter_query_parameters=FILTERSET,
+                 filter_post_data_parameters=FILTERSET)
 
 class ProjectTest(TestCase):
     def setUp(self):
-        self.token = 'XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQhvpEP'
+        settings.DEBUG = True
+        self.token = 'ACCESSTOKEN'
         self.url = 'https://www.openhumans.org/api/direct-sharing/project/members/?access_token={}'.format(
                     self.token)
 
-    @vcr.use_cassette('tests/members.yml')
+    @my_vcr.use_cassette()
     def test_members_request(self):
         """memebers list API"""
         response = requests.get(self.url)
         self.assertEqual(response.status_code, 200)
-
-
-my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'), cassette_library_dir='project_admin/cassettes')
 
 
 class LoginTest(TestCase):
@@ -26,7 +31,7 @@ class LoginTest(TestCase):
     def setUp(self):
         settings.DEBUG = True
         self.invalid_token = 'INVALID_TOKEN'
-        self.master_token = 'XitlFDXBqm5TRK8Vuh3Ey2cDFdiTWz7amKpot97H9Xfgak1qpvray0b0arQhvpEP'
+        self.master_token = 'ACCESSTOKEN'
         self.project_info_url = 'https://www.openhumans.org/api/direct-sharing/project/?access_token={}'
 
     @my_vcr.use_cassette()
@@ -41,6 +46,7 @@ class LoginTest(TestCase):
         response = requests.get(request_url)
         self.assertEqual(response.status_code, 200)
 
+    @my_vcr.use_cassette()
     def test_login_success(self):
         response = self.client.post(reverse('login'), {'token': self.master_token}, follow=True)
         self.assertEqual(response.status_code, 200)
