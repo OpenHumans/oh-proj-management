@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from .forms import TokenForm
 from .models import Project, ProjectMember
+from .filter import MemberFilter
 
 
 class HomeView(ListView):
@@ -81,8 +82,10 @@ class MembersView(TemplateView):
             ).delete()
             for member in members:
                 [m, _] = project.projectmember_set.get_or_create(id=int(member['project_member_id']),
-                                                                 username=member.get('username'),
-                                                                 date_joined=dateutil.parser.parse(member['created']))
+                                                                 date_joined=dateutil.parser.parse(member['created']),
+                                                                 sources_shared=member.get('sources_shared'),
+                                                                 message_permission=member.get('message_permission')
+                                                                 )
                 for file in member['data']:
                     project.file_set.update_or_create(id=file['id'],
                                                       basename=file['basename'],
@@ -92,17 +95,30 @@ class MembersView(TemplateView):
                                                       defaults={
                                                           'download_url': file['download_url'],
                                                       })
+
+            member_list = project.projectmember_set.all()
+            member_filter = MemberFilter(request.GET, queryset=member_list)
             context.update({'page': 'members',
+                            'filter': member_filter})
+            return self.render_to_response(context)
+        except Exception as e:
+            messages.error(self.request, e, 'danger')
+            return redirect('login')
+
+
+class GroupsView(TemplateView):
+    template_name = 'project_admin/groups.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        project = Project.objects.get(user=self.request.user)
+        try:
+            context.update({'page': 'groups',
                             'members': project.projectmember_set.all(),
                             'groups': project.projectgroup_set.all()})
             return self.render_to_response(context)
         except Exception as e:
-            if 'detail' in member_info:
-                messages.error(self.request, member_info['detail'] +
-                               ' Check your token in the'
-                               ' project management interface.', 'danger')
-            else:
-                messages.error(self.request, e, 'danger')
+            messages.error(self.request, e, 'danger')
             return redirect('login')
 
 
@@ -127,7 +143,7 @@ def create_group(request):
             id__in=request.POST.getlist('selected_members')
         )
     ])
-    return redirect('members')
+    return redirect('groups')
 
 
 def update_group(request, group_pk):
@@ -137,13 +153,13 @@ def update_group(request, group_pk):
     group.description = request.POST.get('group_{}_description'
                                          .format(group_pk))
     group.save()
-    return redirect('members')
+    return redirect('groups')
 
 
 def delete_group(request, group_pk):
     project = Project.objects.get(user=request.user)
     project.projectgroup_set.get(pk=group_pk).delete()
-    return redirect('members')
+    return redirect('groups')
 
 
 def add_members(request):
@@ -156,7 +172,7 @@ def add_members(request):
             id__in=request.POST.getlist('selected_members')
         )
     ])
-    return redirect('members')
+    return redirect('groups')
 
 
 def remove_member(request, group_id, member_id):
@@ -167,4 +183,5 @@ def remove_member(request, group_id, member_id):
     through_model.objects.filter(
         projectgroup=group, projectmember=member
     ).delete()
-    return redirect('members')
+    return redirect('groups')
+

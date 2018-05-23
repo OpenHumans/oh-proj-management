@@ -1,19 +1,14 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
-
 "flake8" = "*"
 coverage = "*"
 vcrpy = "*"
 
-
 [packages]
-
 certifi = "*"
 chardet = "*"
 configparser = "*"
@@ -29,8 +24,8 @@ tini = "*"
 "urllib3" = "*"
 whitenoise = "*"
 python-dateutil = "*"
-
+django-filters = "*"
+django-widget-tweaks = "*"
 
 [requires]
-
 python_version = "3.6"

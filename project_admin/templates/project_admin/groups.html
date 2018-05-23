@@ -1,0 +1,168 @@
+{% extends 'project_admin/base.html' %}
+
+{% block main_container %}
+
+  <div class="row">
+    <div class="col-lg-4 mb-3">
+      <div class="list-group">
+
+        <a class="list-group-item list-group-item-action bg-info text-white mb-3" data-toggle="list" href="#newgroup" role="tab">
+          Create a new group
+        </a>
+
+        {% for group in groups %}
+          <a class="list-group-item list-group-item-action" data-toggle="list" href="#{{ group.pk }}_info" role="tab">
+            {{ group.name }}
+            <span class="badge badge-primary badge-pill float-right">
+            {{ group.projectmember_set.all | length }}
+          </span>
+          </a>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="tab-content">
+
+        <div id="newgroup" class="tab-pane" role="tabpanel">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title mb-4">
+                Create a new group
+              </h3>
+              <form action="{% url 'create_group' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="new_group_name">Name</label>
+                  <input type="text" class="form-control" name="new_group_name" id="new_group_name" required>
+                </div>
+                <div class="form-group">
+                  <label for="new_group_description">Description</label>
+                  <textarea class="form-control" name="new_group_description" id="new_group_description" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="selected_members">Members</label>
+                  <select class="custom-select" name="selected_members" id="selected_members" multiple>
+                    {% for member in members %}
+                      <option value={{ member.id }}>
+                        {% firstof member.username member.id %}
+                        {% if member.groups.all|length > 0 %} - {% endif %}
+                        {% for group in member.groups.all %}
+                          {% if not forloop.first %}, {% endif %}
+                          {{ group.name }}
+                        {% endfor %}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                </div>
+                <button type="submit" class="btn btn-info float-right">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {% for group in groups %}
+          <div id="{{ group.pk }}_info" class="tab-pane" role="tabpanel">
+            <div class="card">
+              <div class="card-body">
+                <form action="{% url 'update_group' group.pk %}" method="post">
+                  {% csrf_token %}
+                  <div class="card-title row mb-4">
+                    <div class="col-8">
+                      <h4 class="group_{{ group.pk }}_info collapse show">{{ group.name }}</h4>
+                      <input type="text" class="form-control-lg w-100 group_{{ group.pk }}_info collapse" name="group_{{ group.pk }}_name" value="{{ group.name }}" required>
+                    </div>
+                    <div class="col-4">
+                      <div class="float-right">
+                        <a data-target=".group_{{ group.pk }}_info" data-toggle="collapse" href="#" class="w-100 btn bg-white border border-info text-info">
+                          Edit
+                        </a>
+                        <button type="submit" class="w-100 my-2 group_{{ group.pk }}_info collapse btn bg-white border border-success text-success">
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="group_{{ group.pk }}_info collapse show">{{ group.description|linebreaks }}</div>
+                    <textarea class="form-control group_{{ group.pk }}_info collapse" name="group_{{ group.pk }}_description" required>{{ group.description }}</textarea>
+                  </div>
+                </form>
+                <h4 class="mt-4 mb-3">Members</h4>
+                <div class="list-group">
+                  {% for member in group.projectmember_set.all %}
+                    <div class="mb-3">
+                      <a class="list-group-item bg-info text-white" data-toggle="collapse"
+                         href="#{{ member.id }}_info_{{ group.pk }}" role="button">
+                        <h5>{% firstof member.username member.id %}</h5>
+                      </a>
+                      <div class="collapse" id="{{ member.id }}_info_{{ group.pk }}">
+                        {% include 'project_admin/member_card.html' with member=member %}
+                      </div>
+                    </div>
+                  {% endfor %}
+
+                  <!-- Add member to group -->
+                  <div class="mt-4 mb-1">
+                    <a class="list-group-item border border-info text-info text-right" data-toggle="collapse"
+                       href="#addmember_to_{{ group.pk }}" role="button">
+                      Add members to group
+                    </a>
+                    <div class="collapse" id="addmember_to_{{ group.pk }}">
+                      <div class="card">
+                        <div class="card-body">
+                          <form action="{% url 'add_members' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="group_pk" value={{ group.pk }}>
+                            <div class="form-group">
+                              <label for="selected_members">Members</label>
+                              <select class="custom-select" name="selected_members" id="selected_members" multiple>
+                                {% for member in members %}
+                                  {% if group in member.groups.all %}
+                                  {% else %}
+                                    {% if member.group != group %}
+                                      <option value={{ member.id }}>
+                                        {% firstof member.username member.id %}
+                                        {% if member.groups.all|length > 0 %} - {% endif %}
+                                        {% for group in member.groups.all %}
+                                          {% if not forloop.first %}, {% endif %}
+                                          {{ group.name }}
+                                        {% endfor %}
+                                      </option>
+                                    {% endif %}
+                                  {% endif %}
+                                {% endfor %}
+                              </select>
+                              <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                            </div>
+                            <button type="submit" class="btn btn-info float-right">Submit</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Add member to group -->
+
+                  <!-- Delete group -->
+                  <div class="mb-1">
+                    <a class="list-group-item border border-danger text-danger text-right"
+                       href="{% url 'delete_group' group.pk %}">
+                      Delete group
+                    </a>
+                  </div>
+                  <!-- Delete group -->
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+{% endblock main_container %}

@@ -36,11 +36,12 @@ class ProjectGroup(models.Model):
 
 class ProjectMember(models.Model):
     id = models.IntegerField(primary_key=True)
-    username = models.CharField(max_length=50, null=True)
     date_joined = models.DateTimeField()
+    sources_shared = models.CharField(max_length=1000, null=True)
+    message_permission = models.BooleanField(default=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     groups = models.ManyToManyField(ProjectGroup)
-
+    
 
 class File(models.Model):
     id = models.IntegerField(primary_key=True)

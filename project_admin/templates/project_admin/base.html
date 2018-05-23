@@ -48,6 +48,9 @@
             <li class="nav-item {% if page == 'members' %}active{% endif %}">
               <a class="nav-link" href="{% url 'members' %}">Member Details</a>
             </li>
+            <li class="nav-item {% if page == 'groups' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'groups' %}">Group Details</a>
+            </li>
             <li>
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
