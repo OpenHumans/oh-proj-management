@@ -41,7 +41,7 @@ class ProjectMember(models.Model):
     message_permission = models.BooleanField(default=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     groups = models.ManyToManyField(ProjectGroup)
-    
+
 
 class File(models.Model):
     id = models.IntegerField(primary_key=True)

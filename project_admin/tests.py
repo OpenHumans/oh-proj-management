@@ -6,11 +6,12 @@ from django.conf import settings
 
 FILTERSET = [('access_token', 'ACCESSTOKEN')]
 
-my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'), 
+my_vcr = vcr.VCR(path_transformer=vcr.VCR.ensure_suffix('.yaml'),
                  cassette_library_dir='project_admin/cassettes',
                  filter_headers=[('Authorization', 'XXXXXXXX')],
                  filter_query_parameters=FILTERSET,
                  filter_post_data_parameters=FILTERSET)
+
 
 class ProjectTest(TestCase):
     def setUp(self):

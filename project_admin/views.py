@@ -184,4 +184,3 @@ def remove_member(request, group_id, member_id):
         projectgroup=group, projectmember=member
     ).delete()
     return redirect('groups')
-

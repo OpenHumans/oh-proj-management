@@ -1,6 +1,6 @@
-from django import forms
 import django_filters
 from .models import ProjectMember
+
 
 class MemberFilter(django_filters.FilterSet):
     date_joined = django_filters.NumberFilter(name='date_joined', lookup_expr='year')
