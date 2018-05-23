@@ -24,8 +24,8 @@ tini = "*"
 "urllib3" = "*"
 whitenoise = "*"
 python-dateutil = "*"
-django-filters = "*"
 django-widget-tweaks = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.6"
