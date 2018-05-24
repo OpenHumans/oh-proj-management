@@ -31,35 +31,37 @@
       </div>
     </form>
     <br>
-    <table class="table table-bordered">
+    
+    <table class="table table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
+          <th></th>
           <th>Project Member Id</th>
           <th>Date joined</th>
           <th>Message Permission</th>
           <th>Sources Shared</th>
-          <th>Groups Joined</th>
         </tr>
       </thead>
       <tbody>
         {% for member in filter.qs %}
+          <tr class="accordion-toggle" data-toggle="collapse" href="#{{ member.id }}_info_{{ group.pk }}">
+              <td><button class="btn btn-default btn-xs"><span class="fa fa-toggle-down	                "></span></button></td>
+              <td>{{ member.id }}</td>
+              <td>{{ member.date_joined }}</td>
+              <td>{{ member.message_permission }}</td>
+              <td>{{ member.sources_shared }}</td>
+          </tr>
           <tr>
-            <td>{{ member.id }}</td>
-            <td>{{ member.date_joined }}</td>
-            <td>{{ member.message_permission }}</td>
-            <td>{{ member.sources_shared }}</td>
-            <td>
-              {% for group in member.groups.all %}
-                {{ group.name }}
-              {% empty %}
-                <em class="text-muted">No group</em>
-              {% endfor %}
+            <td colspan="8" class="hiddenRow">
+              <div class="accordian-body collapse" id="{{ member.id }}_info_{{ group.pk }}">
+                {% include 'project_admin/member_card.html' with member=member %}
+              </div>
             </td>
           </tr>
-        {% empty %}
-          <tr>
-            <td colspan="5">No data</td>
-          </tr>
+          {% empty %}
+            <tr>
+              <td>No data</td>
+            </tr>
         {% endfor %}
       </tbody>
     </table>

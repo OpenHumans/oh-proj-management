@@ -1,6 +1,5 @@
 import dateutil.parser
 import requests
-from django.db.models import Q
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -13,7 +12,7 @@ from .filter import MemberFilter
 
 
 class HomeView(ListView):
-    template_name = "project_admin/home.html"
+    template_name = 'project_admin/home.html'
     context_object_name = 'project'
 
     def get_context_data(self, **kwargs):
@@ -77,15 +76,14 @@ class MembersView(TemplateView):
         member_info = requests.get(req_url).json()
         try:
             members = member_info['results']
-            project.projectmember_set.filter(
-                ~Q(id__in=map(lambda x: int(x['project_member_id']), members))
-            ).delete()
             for member in members:
                 [m, _] = project.projectmember_set.get_or_create(id=int(member['project_member_id']),
-                                                                 date_joined=dateutil.parser.parse(member['created']),
-                                                                 sources_shared=member.get('sources_shared'),
-                                                                 message_permission=member.get('message_permission')
-                                                                 )
+                                                                 defaults={'date_joined':
+                                                                 dateutil.parser.parse(member['created']),
+                                                                           'sources_shared':
+                                                                 member.get('sources_shared'),
+                                                                           'message_permission':
+                                                                 member.get('message_permission')})
                 for file in member['data']:
                     project.file_set.update_or_create(id=file['id'],
                                                       basename=file['basename'],
