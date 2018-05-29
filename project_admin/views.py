@@ -97,7 +97,9 @@ class MembersView(TemplateView):
             member_list = project.projectmember_set.all()
             member_filter = MemberFilter(request.GET, queryset=member_list)
             context.update({'page': 'members',
-                            'filter': member_filter})
+                            'filter': member_filter,
+                            'groups': list(project.projectgroup_set.all())
+                            })
             return self.render_to_response(context)
         except Exception as e:
             messages.error(self.request, e, 'danger')

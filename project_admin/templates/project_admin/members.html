@@ -2,11 +2,9 @@
 
 {% block main_container %}
 {% load widget_tweaks %}
-
-
+  <!--Filter-->
   <form method="get">
       <div class="well">
-        <h4 style="margin-top: 0">Filter</h4>
         <div class="row">
           <div class="form-group col-sm-4 col-md-3">
             {{ filter.form.id.label_tag }}
@@ -32,28 +30,34 @@
     </form>
     <br>
     
+    <!--Members-->
     <table class="table table-condensed" style="border-collapse:collapse;">
       <thead>
         <tr>
-          <th></th>
           <th>Project Member Id</th>
           <th>Date joined</th>
           <th>Message Permission</th>
           <th>Sources Shared</th>
+          <th>Groups Joined</th>
         </tr>
       </thead>
       <tbody>
         {% for member in filter.qs %}
-          <tr class="accordion-toggle" data-toggle="collapse" href="#{{ member.id }}_info_{{ group.pk }}">
-              <td><button class="btn btn-default btn-xs"><span class="fa fa-toggle-down	                "></span></button></td>
+        <tr class="accordion-toggle" data-toggle="collapse" href="#{{member.id}}">
               <td>{{ member.id }}</td>
               <td>{{ member.date_joined }}</td>
               <td>{{ member.message_permission }}</td>
               <td>{{ member.sources_shared }}</td>
+              <td> 
+                {% for group in member.groups.all %}
+                  {% if not forloop.first %}, {% endif %}  
+                    {{group.name}}
+                {% endfor %}
+              </td>
           </tr>
           <tr>
-            <td colspan="8" class="hiddenRow">
-              <div class="accordian-body collapse" id="{{ member.id }}_info_{{ group.pk }}">
+            <td colspan="8" class="hiddenRow" margin-bottom=0>
+              <div class="accordian-body collapse" id="{{member.id}}">
                 {% include 'project_admin/member_card.html' with member=member %}
               </div>
             </td>
@@ -64,6 +68,44 @@
             </tr>
         {% endfor %}
       </tbody>
-    </table>
+    </table>   
 
+
+    <!-- Add member to group -->
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+            <a align="center">Groups</a>
+            <button align="right" type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form action="{% url 'add_members' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="group_pk" value={{groups}}>
+                <div class="form-group">
+                  <select class="custom-select" name="selected_members" id="selected_members" multiple>
+                    {% for group in groups %}
+                      {% if group in member.groups.all %}
+                      {% else %}
+                        {% if member.group != group %}
+                          <option value={{ group.name }}>
+                          </option>
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+
+                  <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-info float-right btn-xs">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add member to group -->
+    
 {% endblock main_container %}

@@ -1,9 +1,10 @@
 <div class="card">
   <div class="card-body">
+    <!--Data Shared-->
     <section>
       <h5 class="card-title">Data Shared</h5>
       {% if member.file_set.all|length > 0 %}
-        <table class="table table-hover">
+        <table class="table table-striped">
           <thead>
           <tr>
             <th style="width: 60%">Name</th>
@@ -33,10 +34,14 @@
         </div>
       {% endif %}
     </section>
+    <!--Data Shared-->
+
+    <!--Groups-->
     <section>
-      <h5 class="card-title">Groups</h5>
+      <h5 align="left" class="card-title">Groups</h5>
+        <h1> <button data-member="{{member}}" data-groups="{{groups}}" data-membergroups= "{{member.groups.all}}" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Add to New Group</button> </h1>
       {% if member.groups.all|length > 0 %}
-        <table class="table table-hover">
+        <table class="table table-striped">
           <thead>
           <tr>
             <th width="30%">Name</th>
@@ -66,5 +71,7 @@
         </div>
       {% endif %}
     </section>
+    <!--Groups-->
+
   </div>
 </div>
