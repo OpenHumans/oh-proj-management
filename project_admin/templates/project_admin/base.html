@@ -20,7 +20,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Local CSS overrides -->
-    <link href="{% static "oh_proj_management/main.css" %}" rel="stylesheet">
+    <link href="{% static 'project_admin/main.css' %}" rel="stylesheet">
+
+    <!--FontAwesome-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -47,6 +52,9 @@
             </li>
             <li class="nav-item {% if page == 'members' %}active{% endif %}">
               <a class="nav-link" href="{% url 'members' %}">Member Details</a>
+            </li>
+            <li class="nav-item {% if page == 'groups' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'groups' %}">Group Details</a>
             </li>
             <li>
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>
@@ -95,6 +103,6 @@
 -    <!-- Latest compiled and minified JavaScript via MaxCDN -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-- Local JavaScript -->
-    <script src="{% static "oh_proj_management/main.js" %}"></script>
+    <script src="{% static '/project_admin/main.js' %}"></script>
   </body>
 </html>
