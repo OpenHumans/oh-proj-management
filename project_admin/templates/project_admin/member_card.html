@@ -1,5 +1,6 @@
 <div class="card">
   <div class="card-body">
+    
     <!--Data Shared-->
     <section>
       <h5 class="card-title">Data Shared</h5>
@@ -39,7 +40,7 @@
     <!--Groups-->
     <section>
       <h5 align="left" class="card-title">Groups</h5>
-        <h1> <button data-member="{{member}}" data-groups="{{groups}}" data-membergroups= "{{member.groups.all}}" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Add to New Group</button> </h1>
+        <h1> <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addToGroup_{{member}}_info_{{groups}}">Add to New Group</button> </h1>
       {% if member.groups.all|length > 0 %}
         <table class="table table-striped">
           <thead>
@@ -55,7 +56,7 @@
               <td>{{ group.name }}</td>
               <td>{{ group.description|linebreaks }}</td>
               <td>
-                <a class="btn btn-sm bg-white border border-danger text-danger" href="{% url 'remove_member' group.id member.id %}">
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'remove_member' group.id member.id %}">
                   Remove from group
                 </a>
               </td>
@@ -72,6 +73,41 @@
       {% endif %}
     </section>
     <!--Groups-->
-
+    
+    <!-- Add member to group -->
+    <section>
+      <div id="addToGroup_{{member}}_info_{{groups}}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+              <h5>Groups</h5>
+              <button align="right" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'add_to_groups' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="member_pk" value={{member.id}}>
+                  <div class="form-group">
+                    <select class="custom-select" name="selected_groups" id="selected_groups" multiple>
+                      {% for group in groups %}
+                        {% if group not in member.groups.all %}
+                            <option value= {{group.id}} title= "{{group.description}}">
+                              {{group.name}}
+                            </option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
+                    </div>
+                  </div>
+              </form>
+            </div>
+        </div>
+      </div>
+    </section>
+    <!-- Add member to group -->    
   </div>
 </div>

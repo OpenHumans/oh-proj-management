@@ -57,7 +57,7 @@
                   </select>
                   <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
                 </div>
-                <button type="submit" class="btn btn-info float-right">Submit</button>
+                <button type="submit" class="btn btn-outline-success float-right">Submit</button>
               </form>
             </div>
           </div>
@@ -76,10 +76,10 @@
                     </div>
                     <div class="col-4">
                       <div class="float-right">
-                        <a data-target=".group_{{ group.pk }}_info" data-toggle="collapse" href="#" class="w-100 btn bg-white border border-info text-info">
+                        <a data-target=".group_{{ group.pk }}_info" data-toggle="collapse" href="#" class="w-100 btn-sm btn btn-outline-info">
                           Edit
                         </a>
-                        <button type="submit" class="w-100 my-2 group_{{ group.pk }}_info collapse btn bg-white border border-success text-success">
+                        <button type="submit" class="w-100 my-2 group_{{ group.pk }}_info collapse btn btn-sm btn-outline-success">
                           Save
                         </button>
                       </div>
@@ -94,66 +94,20 @@
                 <div class="list-group">
                   {% for member in group.projectmember_set.all %}
                     <div class="mb-3">
-                      <a class="list-group-item bg-info text-white" data-toggle="collapse"
-                         href="#{{ member.id }}_info_{{ group.pk }}" role="button">
-                        <h5>{% firstof member.username member.id %}</h5>
-                      </a>
-                      <div class="collapse" id="{{ member.id }}_info_{{ group.pk }}">
-                        {% include 'project_admin/member_card.html' with member=member %}
-                      </div>
+                      <li>{{member.id}}</li> 
                     </div>
                   {% endfor %}
 
-                  <!-- Add member to group -->
-                  <div class="mt-4 mb-1">
-                    <a class="list-group-item border border-info text-info text-right" data-toggle="collapse"
-                       href="#addmember_to_{{ group.pk }}" role="button">
-                      Add members to group
-                    </a>
-                    <div class="collapse" id="addmember_to_{{ group.pk }}">
-                      <div class="card">
-                        <div class="card-body">
-                          <form action="{% url 'add_members' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="group_pk" value={{ group.pk }}>
-                            <div class="form-group">
-                              <label for="selected_members">Members</label>
-                              <select class="custom-select" name="selected_members" id="selected_members" multiple>
-                                {% for member in members %}
-                                  {% if group in member.groups.all %}
-                                  {% else %}
-                                    {% if member.group != group %}
-                                      <option value={{ member.id }}>
-                                        {% firstof member.username member.id %}
-                                        {% if member.groups.all|length > 0 %} - {% endif %}
-                                        {% for group in member.groups.all %}
-                                          {% if not forloop.first %}, {% endif %}
-                                          {{ group.name }}
-                                        {% endfor %}
-                                      </option>
-                                    {% endif %}
-                                  {% endif %}
-                                {% endfor %}
-                              </select>
-                              <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
-                            </div>
-                            <button type="submit" class="btn btn-info float-right">Submit</button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Add member to group -->
-
                   <!-- Delete group -->
                   <div class="mb-1">
-                    <a class="list-group-item border border-danger text-danger text-right"
-                       href="{% url 'delete_group' group.pk %}">
+                    <div class="float-right">
+                      <a class="btn btn-sm btn-outline-danger"
+                      href="{% url 'delete_group' group.pk %}">
                       Delete group
-                    </a>
+                     </a>
+                    </div>
                   </div>
                   <!-- Delete group -->
-
 
                 </div>
               </div>

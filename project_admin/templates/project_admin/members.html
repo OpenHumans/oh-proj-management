@@ -23,7 +23,7 @@
             {% render_field filter.form.message_permission class="form-control" %}
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-outline-primary">
           <span class="glyphicon glyphicon-search"></span> Search
         </button>
       </div>
@@ -70,42 +70,4 @@
       </tbody>
     </table>   
 
-
-    <!-- Add member to group -->
-    <div id="myModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-          <div class="modal-content">
-          <div class="modal-header">
-            <a align="center">Groups</a>
-            <button align="right" type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-            <form action="{% url 'add_members' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="group_pk" value={{groups}}>
-                <div class="form-group">
-                  <select class="custom-select" name="selected_members" id="selected_members" multiple>
-                    {% for group in groups %}
-                      {% if group in member.groups.all %}
-                      {% else %}
-                        {% if member.group != group %}
-                          <option value={{ group.name }}>
-                          </option>
-                        {% endif %}
-                      {% endif %}
-                    {% endfor %}
-                  </select>
-
-                  <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
-                </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-info float-right btn-xs">Submit</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Add member to group -->
-    
 {% endblock main_container %}

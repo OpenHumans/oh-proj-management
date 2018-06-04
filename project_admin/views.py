@@ -162,17 +162,17 @@ def delete_group(request, group_pk):
     return redirect('groups')
 
 
-def add_members(request):
+def add_to_groups(request):
     project = Project.objects.get(user=request.user)
-    group = project.projectgroup_set.get(pk=request.POST.get('group_pk'))
+    member = project.projectmember_set.get(pk=request.POST.get('member_pk'))
     through_model = ProjectMember.groups.through
     through_model.objects.bulk_create([
         through_model(projectgroup=group, projectmember=member)
-        for member in project.projectmember_set.filter(
-            id__in=request.POST.getlist('selected_members')
+        for group in project.projectgroup_set.filter(
+            id__in=request.POST.getlist('selected_groups')
         )
     ])
-    return redirect('groups')
+    return redirect('members')
 
 
 def remove_member(request, group_id, member_id):
@@ -183,4 +183,4 @@ def remove_member(request, group_id, member_id):
     through_model.objects.filter(
         projectgroup=group, projectmember=member
     ).delete()
-    return redirect('groups')
+    return redirect('members')
