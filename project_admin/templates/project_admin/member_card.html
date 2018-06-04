@@ -92,7 +92,7 @@
                       {% for group in groups %}
                         {% if group not in member.groups.all %}
                             <option value= {{group.id}} title= "{{group.description}}">
-                              {{group.name}}
+                              {{group.name}}({{group.id}})
                             </option>
                         {% endif %}
                       {% endfor %}

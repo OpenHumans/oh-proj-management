@@ -95,7 +95,7 @@ class MembersView(TemplateView):
                                                       })
 
             member_list = project.projectmember_set.all()
-            member_filter = MemberFilter(request.GET, queryset=member_list)
+            member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
             context.update({'page': 'members',
                             'filter': member_filter,
                             'groups': list(project.projectgroup_set.all())

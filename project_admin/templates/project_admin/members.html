@@ -6,26 +6,32 @@
   <form method="get">
       <div class="well">
         <div class="row">
-          <div class="form-group col-sm-4 col-md-3">
+          <div class="form-group col-sm-2 ">
             {{ filter.form.id.label_tag }}
             {% render_field filter.form.id class="form-control" %}
           </div>
-          <div class="form-group col-sm-4 col-md-3">
+          <div class="form-group col-sm-3">
             {{ filter.form.date_joined.label_tag }}
             {% render_field filter.form.date_joined class="form-control" %}
           </div>
-          <div class="form-group col-sm-4 col-md-3">
+          <div class="form-group col-sm-2">
             {{ filter.form.sources_shared.label_tag }}
             {% render_field filter.form.sources_shared class="form-control" %}
           </div>
-          <div class="form-group col-sm-4 col-md-3">
+          <div class="form-group col-sm-2">
             {{ filter.form.message_permission.label_tag }}
             {% render_field filter.form.message_permission class="form-control" %}
+          </div>
+          <div class="form-group col-sm-3">
+              {{ filter.form.groups.label_tag }}
+            <div>
+               {% render_field filter.form.groups class="form-control" %}
+             </div>
           </div>
         </div>
         <div class="mb-5">
           <button type="submit" class="btn btn-outline-primary float-right">
-            <span class="glyphicon glyphicon-search"></span> Search
+            Search
           </button>
         </div>
       </div>
@@ -52,7 +58,9 @@
               <td> 
                 {% for group in member.groups.all %}
                   {% if not forloop.first %}, {% endif %}  
-                    {{group.name}}
+                    {{group.name}} ({{group.id}})
+                  {% empty %}
+                    <em class="text-muted">No group</em>
                 {% endfor %}
               </td>
           </tr>
