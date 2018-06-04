@@ -185,14 +185,16 @@ def remove_member(request, group_id, member_id):
     ).delete()
     return redirect('members')
 
+
 def create_note(request, member_id):
     project = Project.objects.get(user=request.user)
-    projectmember = ProjectMember.objects.get(pk=member_id)    
+    projectmember = ProjectMember.objects.get(pk=member_id)
     project.note_set.create(
         title=request.POST.get('new_note_title'),
         description=request.POST.get('new_note_description'),
-        member = projectmember)
+        member=projectmember)
     return redirect('members')
+
 
 def update_note(request, note_id):
     return redirect('members')
@@ -200,5 +202,3 @@ def update_note(request, note_id):
 
 def delete_note(request, note_id):
     return redirect('members')
-
-

@@ -52,11 +52,12 @@ class File(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     member = models.ForeignKey(ProjectMember, on_delete=models.CASCADE)
 
+
 class Note(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_at= models.DateTimeField(auto_now=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)    
+    modified_at = models.DateTimeField(auto_now=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     member = models.ForeignKey(ProjectMember, on_delete=models.CASCADE)
