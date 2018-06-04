@@ -1,80 +1,153 @@
 <div class="card">
-  <div class="card-body">
-    
-    <!--Data Shared-->
-    <section>
-      <h5 class="card-title">Data Shared</h5>
-      {% if member.file_set.all|length > 0 %}
-        <table class="table">
-          <thead>
-          <tr>
-            <th style="width: 60%">Name</th>
-            <th style="width: 20%">Source</th>
-            <th style="width: 20%">Action</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for file in member.file_set.all %}
-            <tr>
-              <td>{{ file.basename }}</td>
-              <td>{{ file.source }}</td>
-              <td>
-                <a class="btn btn-sm bg-white border border-success text-success" href="{{ file.download_url }}">
-                  Download
-                </a>
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <div class="row">
-          <div class="w-100 text-center">
-            <p>This user has not shared any files yet</p>
-          </div>
+    <div class="card text-center">
+      <div class="card-header">
+      <nav>
+        <div class="nav nav-tabs" role="tablist" id="memberTab">
+          <a class="nav-item nav-link active" id="notes-tab" data-toggle="tab" href="#notes_{{member}}" role="tab" aria-controls="Notes" aria-selected="true">Notes</a>
+          <a class="nav-item nav-link" id="groups-tab" data-toggle="tab" href="#groups_{{member}}" role="tab" aria-controls="Groups" aria-selected="false">Groups</a>
+          <a class="nav-item nav-link"id="datashared-tab"  data-toggle="tab" href="#datashared_{{member}}" role="tab" aria-controls="Data Shared" aria-selected="false">Data Shared</a>
         </div>
-      {% endif %}
-    </section>
-    <!--Data Shared-->
+      </nav>
+      </div>
 
-    <!--Groups-->
-    <section>
-      <h5 align="left" class="card-title">Groups</h5>
-        <h1> <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addToGroup_{{member}}_info_{{groups}}">Add to New Group</button> </h1>
-      {% if member.groups.all|length > 0 %}
-        <table class="table">
-          <thead>
-          <tr>
-            <th width="20">Group ID</th>
-            <th width="20%">Name</th>
-            <th width="50%">Description</th>
-            <th width="10%">Action</th>
-          </tr>
-          </thead>
-          <tbody>
-          {% for group in member.groups.all %}
+      <div class="tab-content" id="memberTabContent">
+        <!--Notes-->
+        <div class="tab-pane fade show active" id="notes_{{member}}" role="tabpanel" aria-labelledby="notes-tab">
+            <h1> <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addNote_{{member}}">Add New Note</button> </h1>
+            {% if member.note_set.all|length > 0 %}
+            <table class="table">
+              <thead>
+              <tr>
+                <th style="width: 20%">Created on</th>
+                <th style="width: 20%">Last Modified on</th>
+                <th style="width: 20%">Title</th>            
+                <th style="width: 20%">Description</th>
+                <th style="width: 20%">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for note in member.note_set.all %}
+                <tr>
+                  <td>{{ note.created_at }}</td>
+                  <td>{{ note.modified_at }}</td>
+                  <td>{{ note.title }}</td>
+                  <td>{{ note.description }}</td>
+                  <td>
+                      <a class="btn btn-sm btn-outline-info" href="{% url 'update_note' note.id %}">
+                        Edit Note
+                      </a>
+                      <a class="btn btn-sm btn-outline-danger" href="{% url 'delete_note' note.id %}">
+                          Delete Note
+                      </a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+              <div class="row">
+                <div class="w-100 text-center mt-4 mb-3">
+                  <p>This user has no notes yet</p>
+                </div>
+              </div>
+            {% endif %}
+        </div>
+
+        <!--Groups-->
+        <div class="tab-pane fade" id="groups_{{member}}" role="tabpanel" aria-labelledby="groups-tab">
+          <h1> <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addToGroup_{{member}}_info_{{groups}}">Add to New Group</button> </h1>
+          {% if member.groups.all|length > 0 %}
+            <table class="table">
+              <thead>
+              <tr>
+                <th width="20">Group ID</th>
+                <th width="20%">Name</th>
+                <th width="50%">Description</th>
+                <th width="10%">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for group in member.groups.all %}
+                <tr>
+                  <td>{{ group.id }}</td>
+                  <td>{{ group.name }}</td>
+                  <td>{{ group.description|linebreaks }}</td>
+                  <td>
+                    <a class="btn btn-sm btn-outline-danger" href="{% url 'remove_member' group.id member.id %}">
+                      Remove from group
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="row">
+              <div class="w-100 text-center mt-4 mb-3">
+                <p>This user is not part of any groups yet</p>
+              </div>
+            </div>
+          {% endif %}      
+        </div>
+        
+        <!--Data Shared-->
+        <div class="tab-pane fade" id="datashared_{{member}}" role="tabpanel" aria-labelledby="datashared-tab">
+          {% if member.file_set.all|length > 0 %}
+          <table class="table">
+            <thead>
             <tr>
-              <td>{{ group.id }}</td>
-              <td>{{ group.name }}</td>
-              <td>{{ group.description|linebreaks }}</td>
-              <td>
-                <a class="btn btn-sm btn-outline-danger" href="{% url 'remove_member' group.id member.id %}">
-                  Remove from group
-                </a>
-              </td>
+              <th style="width: 60%">Name</th>
+              <th style="width: 20%">Source</th>
+              <th style="width: 20%">Action</th>
             </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <div class="row">
-          <div class="w-100 text-center">
-            <p>This user is not part of any groups yet</p>
+            </thead>
+            <tbody>
+            {% for file in member.file_set.all %}
+              <tr>
+                <td>{{ file.basename }}</td>
+                <td>{{ file.source }}</td>
+                <td>
+                  <a class="btn btn-sm bg-white border border-success text-success" href="{{ file.download_url }}">
+                    Download
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+            <div class="row">
+              <div class="w-100 text-center mt-4 mb-3">
+                <p>This user has not shared any files yet</p>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+    </div>
+    
+    <!--Add new note-->
+    <section>
+      <div id="addNote_{{member}}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5>New Note</h5>
+              <button align="right" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'create_note' member.id %}" method="post">
+                  {% csrf_token %}
+                  <input type="text" name="new_note_title">
+                  <input type="text" name="new_note_description">                  
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
+                  </div>
+              </form>
+            </div>
           </div>
         </div>
-      {% endif %}
+      </div>
     </section>
-    <!--Groups-->
     
     <!-- Add member to group -->
     <section>
@@ -87,29 +160,28 @@
             </div>
             <div class="modal-body">
               <form action="{% url 'add_to_groups' %}" method="post">
-                  {% csrf_token %}
-                  <input type="hidden" name="member_pk" value={{member.id}}>
-                  <div class="form-group">
-                    <select class="custom-select" name="selected_groups" id="selected_groups" multiple>
-                      {% for group in groups %}
-                        {% if group not in member.groups.all %}
-                            <option value= {{group.id}} title= "{{group.description}}">
-                              {{group.name}}({{group.id}})
-                            </option>
-                        {% endif %}
-                      {% endfor %}
-                    </select>
-                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
-                    </div>
-                  </div>
+                {% csrf_token %}
+                <input type="hidden" name="member_pk" value={{member.id}}>
+                <div class="form-group">
+                  <select class="custom-select" name="selected_groups" id="selected_groups" multiple>
+                    {% for group in groups %}
+                      {% if group not in member.groups.all %}
+                          <option value= {{group.id}} title= "{{group.description}}">
+                            {{group.name}}({{group.id}})
+                          </option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                  <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
+                </div>
               </form>
+            </div>
             </div>
         </div>
       </div>
     </section>
-    <!-- Add member to group -->    
   </div>
 </div>
