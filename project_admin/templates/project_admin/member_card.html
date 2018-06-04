@@ -5,7 +5,7 @@
     <section>
       <h5 class="card-title">Data Shared</h5>
       {% if member.file_set.all|length > 0 %}
-        <table class="table table-striped">
+        <table class="table">
           <thead>
           <tr>
             <th style="width: 60%">Name</th>
@@ -42,7 +42,7 @@
       <h5 align="left" class="card-title">Groups</h5>
         <h1> <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addToGroup_{{member}}_info_{{groups}}">Add to New Group</button> </h1>
       {% if member.groups.all|length > 0 %}
-        <table class="table table-striped">
+        <table class="table">
           <thead>
           <tr>
             <th width="20">Group ID</th>
