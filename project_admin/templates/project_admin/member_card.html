@@ -45,14 +45,16 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <th width="30%">Name</th>
-            <th width="60%">Description</th>
+            <th width="20">Group ID</th>
+            <th width="20%">Name</th>
+            <th width="50%">Description</th>
             <th width="10%">Action</th>
           </tr>
           </thead>
           <tbody>
           {% for group in member.groups.all %}
             <tr>
+              <td>{{ group.id }}</td>
               <td>{{ group.name }}</td>
               <td>{{ group.description|linebreaks }}</td>
               <td>

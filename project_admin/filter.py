@@ -11,7 +11,7 @@ def groups_joined(request):
 
 
 class MemberFilter(django_filters.FilterSet):
-    id = django_filters.CharFilter(name='id', lookup_expr='iexact', label='Member Id')
+    id = django_filters.CharFilter(name='id', lookup_expr='iexact', label='Member ID')
     date_joined = django_filters.DateTimeFilter(name='date_joined', lookup_expr='gt',
                                                 widget=forms.DateInput(attrs={'type': 'date', 'class': 'datepicker'}),)
     message_permission = django_filters.ChoiceFilter(name='message_permission', choices=((0, 'False'), (1, 'True')))
