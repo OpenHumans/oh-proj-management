@@ -1,4 +1,5 @@
 <div class="card">
+<<<<<<< HEAD
     <div class="card text-center">
       <div class="card-header">
       <nav>
@@ -95,6 +96,24 @@
           {% if member.file_set.all|length > 0 %}
           <table class="table">
             <thead>
+=======
+  <div class="card-body">
+    
+    <!--Data Shared-->
+    <section>
+      <h5 class="card-title">Data Shared</h5>
+      {% if member.file_set.all|length > 0 %}
+        <table class="table">
+          <thead>
+          <tr>
+            <th style="width: 60%">Name</th>
+            <th style="width: 20%">Source</th>
+            <th style="width: 20%">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for file in member.file_set.all %}
+>>>>>>> master
             <tr>
               <th style="width: 60%">Name</th>
               <th style="width: 20%">Source</th>
@@ -148,6 +167,7 @@
         </div>
       </div>
     </section>
+<<<<<<< HEAD
     
     <!-- Add member to group -->
     <section>
@@ -180,8 +200,83 @@
               </form>
             </div>
             </div>
+=======
+    <!--Data Shared-->
+
+    <!--Groups-->
+    <section>
+      <h5 align="left" class="card-title">Groups</h5>
+        <h1> <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addToGroup_{{member}}_info_{{groups}}">Add to New Group</button> </h1>
+      {% if member.groups.all|length > 0 %}
+        <table class="table">
+          <thead>
+          <tr>
+            <th width="20">Group ID</th>
+            <th width="20%">Name</th>
+            <th width="50%">Description</th>
+            <th width="10%">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for group in member.groups.all %}
+            <tr>
+              <td>{{ group.id }}</td>
+              <td>{{ group.name }}</td>
+              <td>{{ group.description|linebreaks }}</td>
+              <td>
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'remove_member' group.id member.id %}">
+                  Remove from group
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="row">
+          <div class="w-100 text-center">
+            <p>This user is not part of any groups yet</p>
+          </div>
+>>>>>>> master
         </div>
       </div>
     </section>
+    <!--Groups-->
+    
+    <!-- Add member to group -->
+    <section>
+      <div id="addToGroup_{{member}}_info_{{groups}}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+              <h5>Groups</h5>
+              <button align="right" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form action="{% url 'add_to_groups' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="member_pk" value={{member.id}}>
+                  <div class="form-group">
+                    <select class="custom-select" name="selected_groups" id="selected_groups" multiple>
+                      {% for group in groups %}
+                        {% if group not in member.groups.all %}
+                            <option value= {{group.id}} title= "{{group.description}}">
+                              {{group.name}}({{group.id}})
+                            </option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
+                    </div>
+                  </div>
+              </form>
+            </div>
+        </div>
+      </div>
+    </section>
+    <!-- Add member to group -->    
   </div>
 </div>
