@@ -3,11 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
 from project_admin.views import HomeView, MembersView, GroupsView, LoginView, LogoutView, \
-<<<<<<< HEAD
     create_group, update_group, delete_group, add_to_groups, remove_member, create_note, update_note, delete_note
-=======
-    create_group, update_group, delete_group, add_to_groups, remove_member
->>>>>>> master
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,13 +19,7 @@ urlpatterns = [
     path('add_to_groups/', add_to_groups, name='add_to_groups'),
     path('remove_member/<int:group_id>/<int:member_id>/', remove_member,
          name='remove_member'),
-<<<<<<< HEAD
-    path('create_note/<int:member_id>', create_note,
-         name='create_note'),
-    path('update_note/<int:note_id>', update_note,
-         name='update_note'),
-    path('delete_note/<int:note_id>', delete_note,
-         name='delete_note'),
-=======
->>>>>>> master
+    path('create_note/<int:member_id>', create_note, name='create_note'),
+    path('update_note/<int:note_id>', update_note, name='update_note'),
+    path('delete_note/<int:note_id>', delete_note, name='delete_note'),
 ]
