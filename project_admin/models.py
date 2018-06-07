@@ -25,7 +25,7 @@ class Project(models.Model):
     short_description = models.TextField()
     slug = models.SlugField(max_length=50)
     type = models.CharField(max_length=50)
-    token = models.CharField(max_length=50)
+    token = models.CharField(max_length=65)
 
 
 class ProjectGroup(models.Model):
