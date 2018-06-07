@@ -184,3 +184,28 @@ def remove_member(request, group_id, member_id):
         projectgroup=group, projectmember=member
     ).delete()
     return redirect('members')
+
+
+def create_note(request, member_id):
+    project = Project.objects.get(user=request.user)
+    projectmember = ProjectMember.objects.get(pk=member_id)
+    project.note_set.create(
+        title=request.POST.get('new_note_title'),
+        description=request.POST.get('new_note_description'),
+        member=projectmember)
+    return redirect('members')
+
+
+def update_note(request, note_id):
+    project = Project.objects.get(user=request.user)
+    note = project.note_set.get(pk=note_id)
+    note.title = request.POST.get('note_{}_title'.format(note.id))
+    note.description = request.POST.get('note_{}_description'.format(note.id))
+    note.save()
+    return redirect('members')
+
+
+def delete_note(request, note_id):
+    project = Project.objects.get(user=request.user)
+    project.note_set.get(pk=note_id).delete()
+    return redirect('members')
