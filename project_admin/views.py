@@ -102,7 +102,13 @@ class MembersView(TemplateView):
                             })
             return self.render_to_response(context)
         except Exception as e:
-            messages.error(self.request, e, 'danger')
+            # Handle expired master tokens, or serve error message
+            if 'detail' in member_info:
+                messages.error(self.request, member_info['detail'] +
+                               ' Check your token in the'
+                               ' project management interface.', 'danger')
+            else:
+                messages.error(self.request, e, 'danger')
             return redirect('login')
 
 
