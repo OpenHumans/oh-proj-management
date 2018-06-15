@@ -6,7 +6,7 @@
   <form method="get">
       <div class="well">
         <div class="row">
-          <div class="form-group col-sm-2 ">
+          <div class="form-group col-sm-3 ">
             {{ filter.form.id.label_tag }}
             {% render_field filter.form.id class="form-control" %}
           </div>
@@ -14,13 +14,9 @@
             {{ filter.form.date_joined.label_tag }}
             {% render_field filter.form.date_joined class="form-control" %}
           </div>
-          <div class="form-group col-sm-2">
+          <div class="form-group col-sm-3">
             {{ filter.form.sources_shared.label_tag }}
             {% render_field filter.form.sources_shared class="form-control" %}
-          </div>
-          <div class="form-group col-sm-2">
-            {{ filter.form.message_permission.label_tag }}
-            {% render_field filter.form.message_permission class="form-control" %}
           </div>
           <div class="form-group col-sm-3">
               {{ filter.form.groups.label_tag }}
@@ -44,7 +40,7 @@
           <th>Project Member ID</th>
           <th>Date joined</th>
           <th>Message Permission</th>
-          <th>Sources Shared</th>
+          <th>Sources Authorized</th>
           <th>Groups Joined</th>
         </tr>
       </thead>

@@ -77,7 +77,7 @@ class MembersView(TemplateView):
         try:
             members = member_info['results']
             for member in members:
-                [m, _] = project.projectmember_set.get_or_create(id=int(member['project_member_id']),
+                [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
                                                                  defaults={'date_joined':
                                                                  dateutil.parser.parse(member['created']),
                                                                            'sources_shared':
