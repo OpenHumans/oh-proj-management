@@ -77,14 +77,20 @@ class MembersView(TemplateView):
         try:
             members = member_info['results']
             for member in members:
+                # updating/creating project member data
                 [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
-                                                                 defaults={'date_joined':
-                                                                 dateutil.parser.parse(member['created']),
-                                                                           'sources_shared':
-                                                                 member.get('sources_shared'),
-                                                                           'message_permission':
-                                                                 member.get('message_permission')})
+                                                                    defaults={'date_joined':
+                                                                    dateutil.parser.parse(member['created']),
+                                                                              'sources_shared':
+                                                                    member.get('sources_shared'),
+                                                                              'message_permission':
+                                                                    member.get('message_permission')})
+                # fetching old file data for this member
+                project_member_old_files = project.file_set.filter(member=m)
+
                 for file in member['data']:
+                    # maintaining a list of obsolete files for this member in database
+                    project_member_old_files = project_member_old_files.exclude(id=file['id'])
                     project.file_set.update_or_create(id=file['id'],
                                                       basename=file['basename'],
                                                       created=dateutil.parser.parse(file['created']),
@@ -93,6 +99,8 @@ class MembersView(TemplateView):
                                                       defaults={
                                                           'download_url': file['download_url'],
                                                       })
+                # deleting obsolete files from database for this member
+                project.file_set.filter(id__in=project_member_old_files).delete()
 
             member_list = project.projectmember_set.all()
             member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
