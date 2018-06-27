@@ -6,7 +6,7 @@
   <form method="get">
       <div class="well">
         <div class="row">
-          <div class="form-group col-sm-3 ">
+          <div class="form-group col-sm-2 ">
             {{ filter.form.id.label_tag }}
             {% render_field filter.form.id class="form-control" %}
           </div>
@@ -14,11 +14,17 @@
             {{ filter.form.date_joined.label_tag }}
             {% render_field filter.form.date_joined class="form-control" %}
           </div>
-          <div class="form-group col-sm-3">
+          <div class="form-group col-sm-2">
             {{ filter.form.sources_shared.label_tag }}
             {% render_field filter.form.sources_shared class="form-control" %}
           </div>
           <div class="form-group col-sm-3">
+            {{ filter.form.files.label_tag }}
+          <div>
+             {% render_field filter.form.files class="form-control" %}
+           </div>
+        </div>
+          <div class="form-group col-sm-2">
               {{ filter.form.groups.label_tag }}
             <div>
                {% render_field filter.form.groups class="form-control" %}
@@ -41,6 +47,7 @@
           <th>Date joined</th>
           <th>Message Permission</th>
           <th>Sources Authorized</th>
+          <th>Number of Files Shared</th>
           <th>Groups Joined</th>
         </tr>
       </thead>
@@ -51,6 +58,11 @@
               <td>{{ member.date_joined }}</td>
               <td>{{ member.message_permission }}</td>
               <td>{{ member.sources_shared }}</td>
+              <td>
+                  {% for file_count in member.files %}
+                    {{file_count}}
+                {% endfor %}
+              </td>
               <td> 
                 {% for group in member.groups.all %}
                   {% if not forloop.first %}, {% endif %}  
