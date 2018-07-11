@@ -29,6 +29,7 @@ django-filter = "*"
 "boto3" = "*"
 celery = "*"
 redis = "*"
+django-storages = "*"
 
 [requires]
 python_version = "3.6"
