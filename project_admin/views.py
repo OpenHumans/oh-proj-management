@@ -1,9 +1,5 @@
 import dateutil.parser
 import requests
-import os
-import zipfile
-from io import BytesIO
-from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -13,6 +9,7 @@ from django.contrib.auth import login, logout
 from .forms import TokenForm
 from .models import Project, ProjectMember
 from .filter import MemberFilter
+from .tasks import download_zip_files
 
 
 class HomeView(ListView):
@@ -230,26 +227,7 @@ def delete_note(request, note_id):
 
 
 def download_zip_file(request):
-    project = Project.objects.get(user=request.user)
-    file_names = project.file_set.all().values_list('download_url', 'basename', 'id', named=True)
-    zip_subdir = str(request.user)
-    zip_filename = zip_subdir + '.zip'
-    byte_stream = BytesIO()
-
-    with zipfile.ZipFile(byte_stream, 'w') as zf:
-        for filename in file_names:
-            file_response = requests.get(filename.download_url)
-            if file_response.status_code == 200:
-                new_filename = filename.basename + '-' + str(filename.id)
-                with open(new_filename, 'wb') as f:
-                    f.write(file_response.content)
-                zip_path = os.path.join(zip_subdir, new_filename)
-                zf.write(new_filename, zip_path)
-                os.remove(new_filename)
-            else:
-                messages.error(request, str(file_response.status_code) +
-                               ': Something went wrong with file download', 'danger')
-                return redirect('home')
-    resp = HttpResponse(byte_stream.getvalue(), content_type='application/x-zip-compressed')
-    resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
-    return resp
+    task = download_zip_files.delay(request.user.id)
+    messages.info(request, 'File download started with task id: ' + str(task.id) +
+                  '. You will receive an email shortly.')
+    return redirect('members')
