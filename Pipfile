@@ -26,6 +26,9 @@ whitenoise = "*"
 python-dateutil = "*"
 django-widget-tweaks = "*"
 django-filter = "*"
+"boto3" = "*"
+celery = "*"
+redis = "*"
 
 [requires]
 python_version = "3.6"
