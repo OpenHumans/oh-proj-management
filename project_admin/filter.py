@@ -1,6 +1,5 @@
 import django_filters
 from django import forms
-from django.db.models import Count
 from .models import Project, ProjectGroup, ProjectMember, File
 
 
@@ -11,12 +10,12 @@ def groups_joined(request):
     return project.projectgroup_set.all()
 
 
-def number_files_shared(request):
-    if request is None:
-        return File.objects.none()
-    project = Project.objects.get(user=request.user)
-    projectmember = project.projectmember_set.all()
-    return projectmember.annotate(file_count=Count('file')).values_list('file_count', flat=True)
+def number_files_shared():
+    project_members = ProjectMember.objects.all()
+    file_numbers = project_members.values_list(
+        'file_count', flat=True)
+    file_numbers = tuple((value, value) for value in set(file_numbers))
+    return list(file_numbers)
 
 
 class MemberFilter(django_filters.FilterSet):
@@ -24,9 +23,9 @@ class MemberFilter(django_filters.FilterSet):
     date_joined = django_filters.DateTimeFilter(name='date_joined', lookup_expr='gt',
                                                 widget=forms.DateInput(attrs={'type': 'date', 'class': 'datepicker'}),)
     groups = django_filters.ModelChoiceFilter(label='Groups Joined', queryset=groups_joined)
-    files = django_filters.ModelChoiceFilter(label='Number of Files Shared', queryset=number_files_shared)
+    file_count = django_filters.ChoiceFilter(label='Number of Files Shared', choices=number_files_shared())
     sources_shared = django_filters.CharFilter(label='Sources Authorized')
 
     class Meta:
         model = ProjectMember
-        fields = ['id', 'date_joined', 'sources_shared', 'message_permission', 'files', 'groups']
+        fields = ['id', 'date_joined', 'sources_shared', 'message_permission', 'file_count', 'groups']
