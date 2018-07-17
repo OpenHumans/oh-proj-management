@@ -43,6 +43,7 @@ class LoginView(FormView):
         req_url = 'https://www.openhumans.org/api/' \
                   'direct-sharing/project/?access_token={}'.format(token)
         project_info = requests.get(req_url).json()
+        try:
             user = User.objects.get_or_create(
                 username=project_info['id_label']
             )[0]
@@ -108,7 +109,7 @@ class MembersView(TemplateView):
                         'groups': list(project.projectgroup_set.all())
                         })
         return self.render_to_response(context)
-        
+
 
 class GroupsView(TemplateView):
     template_name = 'project_admin/groups.html'
