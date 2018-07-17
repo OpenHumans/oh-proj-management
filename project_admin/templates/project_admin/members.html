@@ -18,11 +18,13 @@
             {{ filter.form.sources_shared.label_tag }}
             {% render_field filter.form.sources_shared class="form-control" %}
           </div>
-          <div class="form-group col-sm-2">
-            {{ filter.form.message_permission.label_tag }}
-            {% render_field filter.form.message_permission class="form-control" %}
-          </div>
           <div class="form-group col-sm-3">
+            {{ filter.form.file_count.label_tag }}
+          <div>
+             {% render_field filter.form.file_count class="form-control" %}
+           </div>
+        </div>
+          <div class="form-group col-sm-2">
               {{ filter.form.groups.label_tag }}
             <div>
                {% render_field filter.form.groups class="form-control" %}
@@ -36,7 +38,9 @@
         </div>
       </div>
     </form>
-    
+
+    <h5><a class="my-2 btn btn-sm btn-outline-info" href="{% url 'download_zip_file' %}">Download all data</a></h5>
+
     <!--Members-->
     <table class="table table-bordered" style="border-collapse:collapse;">
       <thead class="thead-light">
@@ -44,7 +48,8 @@
           <th>Project Member ID</th>
           <th>Date joined</th>
           <th>Message Permission</th>
-          <th>Sources Shared</th>
+          <th>Sources Authorized</th>
+          <th>Number of Files Shared</th>
           <th>Groups Joined</th>
         </tr>
       </thead>
@@ -55,9 +60,12 @@
               <td>{{ member.date_joined }}</td>
               <td>{{ member.message_permission }}</td>
               <td>{{ member.sources_shared }}</td>
-              <td> 
+              <td>
+                    {{member.file_count}}
+              </td>
+              <td>
                 {% for group in member.groups.all %}
-                  {% if not forloop.first %}, {% endif %}  
+                  {% if not forloop.first %}, {% endif %}
                     {{group.name}} ({{group.id}})
                   {% empty %}
                     <em class="text-muted">No group</em>
@@ -77,6 +85,6 @@
             </tr>
         {% endfor %}
       </tbody>
-    </table>   
+    </table>
 
 {% endblock main_container %}

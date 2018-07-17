@@ -2,6 +2,10 @@
 
 {% block main_container %}
 
+  <a href="https://www.openhumans.org/direct-sharing/projects/manage/" target="blank">
+    Go to token page (dev-purpose)
+  </a>
+  <br><br/>
   <form action="" method="post">
       {% csrf_token %}
       {{ form.as_p }}

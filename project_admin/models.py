@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Count
 
 
 class Project(models.Model):
@@ -34,6 +35,13 @@ class ProjectGroup(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 
+class ProjectMemberManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(
+            file_count=Count('file')
+        )
+
+
 class ProjectMember(models.Model):
     id = models.IntegerField(primary_key=True)
     date_joined = models.DateTimeField()
@@ -41,6 +49,7 @@ class ProjectMember(models.Model):
     message_permission = models.BooleanField(default=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     groups = models.ManyToManyField(ProjectGroup)
+    objects = ProjectMemberManager()
 
 
 class File(models.Model):
