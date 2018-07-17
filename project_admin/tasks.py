@@ -47,7 +47,7 @@ def download_zip_files(user):
                                                                             ContentType='application/zip')
             zipfile_url = s3_client.generate_presigned_url('get_object',
                                                            Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
-                                                                   'Key': zip_filename}, ExpiresIn=100)
+                                                                   'Key': zip_filename}, ExpiresIn=86400)
         send_email(download_success, zipfile_url, project.contact_email, project.name)
     except Exception as e:
         logger.error('Downloading zip file crashed', e)
