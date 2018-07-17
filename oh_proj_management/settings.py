@@ -174,15 +174,15 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_IGNORE_RESULT = False
 
 # AWS STUFF
-AWS_ACCESS_KEY_ID = 'enter access key id here'
-AWS_SECRET_ACCESS_KEY = 'enter access secret key here'
-AWS_STORAGE_BUCKET_NAME = 'open-humans-dev-rosy-gupta'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', 'testkeyifnone')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', 'testkeyifnone')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'testkeyifnone')
 
 # EMAIL STUFF
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'enter host email here'
-EMAIL_HOST_PASSWORD = 'enter host password here'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'testkeyifnone')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'testkeyifnone')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'testkeyifnone')
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'enter default from email here'
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'testkeyifnone')

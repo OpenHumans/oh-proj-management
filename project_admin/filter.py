@@ -1,6 +1,6 @@
 import django_filters
 from django import forms
-from .models import Project, ProjectGroup, ProjectMember, File
+from .models import Project, ProjectGroup, ProjectMember
 
 
 def groups_joined(request):

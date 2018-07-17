@@ -22,7 +22,7 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
 ### Get set up
 
  * Use Python 3.x. (The app should work with Heroku's current Python 3 support.)
- * Copy `env.example` to `.env` and modify as needed.
+ * Copy `env.example` to `.env` and modify the AWS and Email settings as needed.
  * Set up a virtual environment (see below)
  * Install requirements with `pipenv --three install`
  * Run `python3 manage.py migrate` to update the database
