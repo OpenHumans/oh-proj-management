@@ -43,7 +43,6 @@ class LoginView(FormView):
         req_url = 'https://www.openhumans.org/api/' \
                   'direct-sharing/project/?access_token={}'.format(token)
         project_info = requests.get(req_url).json()
-        try:
             user = User.objects.get_or_create(
                 username=project_info['id_label']
             )[0]
@@ -75,51 +74,41 @@ class MembersView(TemplateView):
         req_url = 'https://www.openhumans.org/api/direct-sharing' \
                   '/project/members/?access_token={}'.format(token)
         member_info = requests.get(req_url).json()
-        try:
-            members = member_info['results']
-            for member in members:
-                # updating/creating project member data
-                [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
-                                                                    defaults={'date_joined':
-                                                                    dateutil.parser.parse(member['created']),
-                                                                              'sources_shared':
-                                                                    member.get('sources_shared'),
-                                                                              'message_permission':
-                                                                    member.get('message_permission')})
-                # fetching old file data for this member
-                project_member_old_files = project.file_set.filter(member=m)
+        members = member_info['results']
+        for member in members:
+            # updating/creating project member data
+            [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
+                                                                defaults={'date_joined':
+                                                                dateutil.parser.parse(member['created']),
+                                                                          'sources_shared':
+                                                                member.get('sources_shared'),
+                                                                          'message_permission':
+                                                                member.get('message_permission')})
+            # fetching old file data for this member
+            project_member_old_files = project.file_set.filter(member=m)
 
-                for file in member['data']:
-                    # maintaining a list of obsolete files for this member in database
-                    project_member_old_files = project_member_old_files.exclude(id=file['id'])
-                    project.file_set.update_or_create(id=file['id'],
-                                                      basename=file['basename'],
-                                                      created=dateutil.parser.parse(file['created']),
-                                                      source=file['source'],
-                                                      member=m,
-                                                      defaults={
-                                                          'download_url': file['download_url'],
-                                                      })
-                # deleting obsolete files from database for this member
-                project.file_set.filter(id__in=project_member_old_files).delete()
+            for file in member['data']:
+                # maintaining a list of obsolete files for this member in database
+                project_member_old_files = project_member_old_files.exclude(id=file['id'])
+                project.file_set.update_or_create(id=file['id'],
+                                                  basename=file['basename'],
+                                                  created=dateutil.parser.parse(file['created']),
+                                                  source=file['source'],
+                                                  member=m,
+                                                  defaults={
+                                                      'download_url': file['download_url'],
+                                                  })
+            # deleting obsolete files from database for this member
+            project.file_set.filter(id__in=project_member_old_files).delete()
 
-            member_list = project.projectmember_set.all()
-            member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
-            context.update({'page': 'members',
-                            'filter': member_filter,
-                            'groups': list(project.projectgroup_set.all())
-                            })
-            return self.render_to_response(context)
-        except Exception as e:
-            # Handle expired master tokens, or serve error message
-            if 'detail' in member_info:
-                messages.error(self.request, member_info['detail'] +
-                               ' Check your token in the'
-                               ' project management interface.', 'danger')
-            else:
-                messages.error(self.request, e, 'danger')
-            return redirect('login')
-
+        member_list = project.projectmember_set.all()
+        member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
+        context.update({'page': 'members',
+                        'filter': member_filter,
+                        'groups': list(project.projectgroup_set.all())
+                        })
+        return self.render_to_response(context)
+        
 
 class GroupsView(TemplateView):
     template_name = 'project_admin/groups.html'
