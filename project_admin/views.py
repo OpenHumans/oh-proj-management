@@ -77,13 +77,13 @@ class MembersView(TemplateView):
         members = get_all_members(token)
         for member in members:
             # updating/creating project member data
-            [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
-                                                                defaults={'date_joined':
-                                                                dateutil.parser.parse(member['created']),
-                                                                          'sources_shared':
-                                                                member.get('sources_shared'),
-                                                                          'message_permission':
-                                                                member.get('message_permission')})
+            [m, _] = ProjectMember.update_or_create(
+                    id=int(member['project_member_id']),
+                    project=project,
+                    defaults={
+                        'date_joined': dateutil.parser.parse(member['created']),
+                        'sources_shared': member.get('sources_shared'),
+                        'message_permission': member.get('message_permission')})
             # fetching old file data for this member
             project_member_old_files = project.file_set.filter(member=m)
 
