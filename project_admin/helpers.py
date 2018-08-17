@@ -40,7 +40,6 @@ def update_members(members, project):
                                               })
         # deleting obsolete files from database for this member
         project.file_set.filter(id__in=project_member_old_files).delete()
-    pass
 
 
 def get_all_members(token):
