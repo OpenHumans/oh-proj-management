@@ -73,50 +73,50 @@ class MembersView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         token = project.token
-        try:
-            members = get_all_members(token)
-            for member in members:
-                # updating/creating project member data
-                [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
-                                                                    defaults={'date_joined':
-                                                                    dateutil.parser.parse(member['created']),
-                                                                              'sources_shared':
-                                                                    member.get('sources_shared'),
-                                                                              'message_permission':
-                                                                    member.get('message_permission')})
-                # fetching old file data for this member
-                project_member_old_files = project.file_set.filter(member=m)
+        #try:
+        members = get_all_members(token)
+        for member in members:
+            # updating/creating project member data
+            [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
+                                                                defaults={'date_joined':
+                                                                dateutil.parser.parse(member['created']),
+                                                                          'sources_shared':
+                                                                member.get('sources_shared'),
+                                                                          'message_permission':
+                                                                member.get('message_permission')})
+            # fetching old file data for this member
+            project_member_old_files = project.file_set.filter(member=m)
 
-                for file in member['data']:
-                    # maintaining a list of obsolete files for this member in database
-                    project_member_old_files = project_member_old_files.exclude(id=file['id'])
-                    project.file_set.update_or_create(id=file['id'],
-                                                      basename=file['basename'],
-                                                      created=dateutil.parser.parse(file['created']),
-                                                      source=file['source'],
-                                                      member=m,
-                                                      defaults={
-                                                          'download_url': file['download_url'],
-                                                      })
-                # deleting obsolete files from database for this member
-                project.file_set.filter(id__in=project_member_old_files).delete()
+            for file in member['data']:
+                # maintaining a list of obsolete files for this member in database
+                project_member_old_files = project_member_old_files.exclude(id=file['id'])
+                project.file_set.update_or_create(id=file['id'],
+                                                  basename=file['basename'],
+                                                  created=dateutil.parser.parse(file['created']),
+                                                  source=file['source'],
+                                                  member=m,
+                                                  defaults={
+                                                      'download_url': file['download_url'],
+                                                  })
+            # deleting obsolete files from database for this member
+            project.file_set.filter(id__in=project_member_old_files).delete()
 
-            member_list = project.projectmember_set.all()
-            member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
-            context.update({'page': 'members',
-                            'filter': member_filter,
-                            'groups': list(project.projectgroup_set.all())
-                            })
-            return self.render_to_response(context)
-        except Exception as e:
+        member_list = project.projectmember_set.all()
+        member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
+        context.update({'page': 'members',
+                        'filter': member_filter,
+                        'groups': list(project.projectgroup_set.all())
+                        })
+        return self.render_to_response(context)
+        #except Exception as e:
             # Handle expired master tokens, or serve error message
-            if 'detail' in members:
-                messages.error(self.request, members['detail'] +
-                               ' Check your token in the'
-                               ' project management interface.', 'danger')
-            else:
-                messages.error(self.request, e, 'danger')
-            return redirect('login')
+        #    if 'detail' in members:
+        #        messages.error(self.request, members['detail'] +
+        #                       ' Check your token in the'
+        #                       ' project management interface.', 'danger')
+        #    else:
+        #        messages.error(self.request, e, 'danger')
+        #    return redirect('login')
 
 
 class GroupsView(TemplateView):
