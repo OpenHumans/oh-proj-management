@@ -1,4 +1,3 @@
-import dateutil.parser
 import requests
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -7,9 +6,10 @@ from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from .forms import TokenForm
-from .models import Project, ProjectMember
+from .models import Project, ProjectMember, ProjectGroup
 from .filter import MemberFilter
 from .tasks import download_zip_files
+from .helpers import get_all_members, update_members
 
 
 class HomeView(ListView):
@@ -72,36 +72,9 @@ class MembersView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         token = project.token
-        req_url = 'https://www.openhumans.org/api/direct-sharing' \
-                  '/project/members/?access_token={}'.format(token)
-        member_info = requests.get(req_url).json()
         try:
-            members = member_info['results']
-            for member in members:
-                # updating/creating project member data
-                [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
-                                                                    defaults={'date_joined':
-                                                                    dateutil.parser.parse(member['created']),
-                                                                              'sources_shared':
-                                                                    member.get('sources_shared'),
-                                                                              'message_permission':
-                                                                    member.get('message_permission')})
-                # fetching old file data for this member
-                project_member_old_files = project.file_set.filter(member=m)
-
-                for file in member['data']:
-                    # maintaining a list of obsolete files for this member in database
-                    project_member_old_files = project_member_old_files.exclude(id=file['id'])
-                    project.file_set.update_or_create(id=file['id'],
-                                                      basename=file['basename'],
-                                                      created=dateutil.parser.parse(file['created']),
-                                                      source=file['source'],
-                                                      member=m,
-                                                      defaults={
-                                                          'download_url': file['download_url'],
-                                                      })
-                # deleting obsolete files from database for this member
-                project.file_set.filter(id__in=project_member_old_files).delete()
+            members = get_all_members(token)
+            update_members(members, project)
 
             member_list = project.projectmember_set.all()
             member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
@@ -112,8 +85,8 @@ class MembersView(TemplateView):
             return self.render_to_response(context)
         except Exception as e:
             # Handle expired master tokens, or serve error message
-            if 'detail' in member_info:
-                messages.error(self.request, member_info['detail'] +
+            if 'detail' in members:
+                messages.error(self.request, members['detail'] +
                                ' Check your token in the'
                                ' project management interface.', 'danger')
             else:
@@ -231,3 +204,14 @@ def download_zip_file(request):
     messages.info(request, 'File download started with task id: ' + str(task.id) +
                   '. You will receive an email shortly.')
     return redirect('members')
+
+
+def download_zip_file_group(request, group_pk):
+    group = ProjectGroup.objects.get(pk=group_pk)
+    if group.project.user.id == request.user.id:
+        task = download_zip_files.delay(request.user.id, group_pk)
+        messages.info(
+                request,
+                'File download started with task id: ' + str(task.id) +
+                '. You will receive an email shortly.')
+    return redirect('groups')
