@@ -1,4 +1,3 @@
-import dateutil.parser
 import requests
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -73,26 +72,26 @@ class MembersView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         token = project.token
-        #try:
-        members = get_all_members(token)
-        update_members(members, project)
+        try:
+            members = get_all_members(token)
+            update_members(members, project)
 
-        member_list = project.projectmember_set.all()
-        member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
-        context.update({'page': 'members',
-                        'filter': member_filter,
-                        'groups': list(project.projectgroup_set.all())
-                        })
-        return self.render_to_response(context)
-        #except Exception as e:
+            member_list = project.projectmember_set.all()
+            member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
+            context.update({'page': 'members',
+                            'filter': member_filter,
+                            'groups': list(project.projectgroup_set.all())
+                            })
+            return self.render_to_response(context)
+        except Exception as e:
             # Handle expired master tokens, or serve error message
-        #    if 'detail' in members:
-        #        messages.error(self.request, members['detail'] +
-        #                       ' Check your token in the'
-        #                       ' project management interface.', 'danger')
-        #    else:
-        #        messages.error(self.request, e, 'danger')
-        #    return redirect('login')
+            if 'detail' in members:
+                messages.error(self.request, members['detail'] +
+                               ' Check your token in the'
+                               ' project management interface.', 'danger')
+            else:
+                messages.error(self.request, e, 'danger')
+            return redirect('login')
 
 
 class GroupsView(TemplateView):
