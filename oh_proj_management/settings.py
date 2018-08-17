@@ -166,8 +166,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'project_admin')
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # CELERY STUFF
-BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+BROKER_URL = os.getenv('REDIS_URL', 'redis://')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
