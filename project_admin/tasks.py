@@ -9,12 +9,12 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from .models import Project
 from .utility import send_email
-from .helpers import get_all_members
+from .helpers import get_all_members, filter_members_group_id
 logger = get_task_logger(__name__)
 
 
 @task(name="download_zip_files")
-def download_zip_files(user):
+def download_zip_files(user, group_id=None):
     try:
         project = Project.objects.get(user=user)
         zip_subdir = str(uuid.uuid4())
@@ -24,7 +24,10 @@ def download_zip_files(user):
                                      aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
         s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                                  aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-        members = get_all_members(project.token)
+        if group_id:
+            members = filter_members_group_id(project.token, group_id)
+        else:
+            members = get_all_members(project.token)
         with zipfile.ZipFile(byte_stream, 'w') as zf:
             for member in members:
                 for oh_file in member['data']:
