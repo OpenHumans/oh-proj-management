@@ -231,12 +231,12 @@ def download_zip_file(request):
     return redirect('members')
 
 
-def download_zip_file_group(request, group_id):
-    group = ProjectGroup.objects.get(group_id)
+def download_zip_file_group(request, group_pk):
+    group = ProjectGroup.objects.get(pk=group_pk)
     if group.project.user.id == request.user.id:
-        task = download_zip_files.delay(request.user.id, group_id)
+        task = download_zip_files.delay(request.user.id, group_pk)
         messages.info(
                 request,
                 'File download started with task id: ' + str(task.id) +
                 '. You will receive an email shortly.')
-    return redirect('members')
+    return redirect('groups')

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from project_admin.views import HomeView, MembersView, GroupsView, LoginView, LogoutView, \
     create_group, update_group, delete_group, add_to_groups, remove_member, create_note, update_note, \
-    delete_note, download_zip_file
+    delete_note, download_zip_file, download_zip_file_group
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +24,8 @@ urlpatterns = [
     path('update_note/<int:note_id>', update_note, name='update_note'),
     path('delete_note/<int:note_id>', delete_note, name='delete_note'),
     path('download_zip_file', download_zip_file, name='download_zip_file'),
+    path(
+        'download_files_group/<int:group_pk>',
+        download_zip_file_group,
+        name='download_files_group')
 ]

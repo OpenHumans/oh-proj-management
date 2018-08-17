@@ -94,7 +94,7 @@
                 <div class="list-group">
                   {% for member in group.projectmember_set.all %}
                     <div class="mb-3">
-                      <li>{{member.id}}</li> 
+                      <li>{{member.id}}</li>
                     </div>
                   {% endfor %}
 
@@ -104,6 +104,9 @@
                       <a class="btn btn-sm btn-outline-danger"
                       href="{% url 'delete_group' group.pk %}">
                       Delete group
+                    </a><br/><br/>
+                     <a href="{% url 'download_files_group' group.pk %}" class="w-100 btn-sm btn btn-outline-info">
+                       Download files of group members
                      </a>
                     </div>
                   </div>
