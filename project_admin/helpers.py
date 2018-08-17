@@ -5,8 +5,11 @@ from .models import ProjectGroup
 def get_all_members(token):
     req_url = 'https://www.openhumans.org/api/direct-sharing' \
               '/project/members/?access_token={}'.format(token)
-    members = requests.get(req_url).json()['results']
-    return members
+    members = requests.get(req_url).json()
+    if 'results' in members.keys():
+        return members['results']
+    else:
+        return members
 
 
 def filter_members_group_id(token, group_id):
