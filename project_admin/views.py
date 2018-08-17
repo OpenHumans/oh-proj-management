@@ -7,7 +7,7 @@ from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from .forms import TokenForm
-from .models import Project, ProjectMember
+from .models import Project, ProjectMember, ProjectGroup
 from .filter import MemberFilter
 from .tasks import download_zip_files
 from .helpers import get_all_members
@@ -228,4 +228,15 @@ def download_zip_file(request):
     task = download_zip_files.delay(request.user.id)
     messages.info(request, 'File download started with task id: ' + str(task.id) +
                   '. You will receive an email shortly.')
+    return redirect('members')
+
+
+def download_zip_file_group(request, group_id):
+    group = ProjectGroup.objects.get(group_id)
+    if group.project.user.id == request.user.id:
+        task = download_zip_files.delay(request.user.id, group_id)
+        messages.info(
+                request,
+                'File download started with task id: ' + str(task.id) +
+                '. You will receive an email shortly.')
     return redirect('members')
