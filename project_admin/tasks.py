@@ -9,6 +9,7 @@ from celery.utils.log import get_task_logger
 from django.conf import settings
 from .models import Project
 from .utility import send_email
+from .helpers import get_all_members
 logger = get_task_logger(__name__)
 
 
@@ -16,7 +17,6 @@ logger = get_task_logger(__name__)
 def download_zip_files(user):
     try:
         project = Project.objects.get(user=user)
-        file_names = project.file_set.all().values_list('download_url', 'basename', 'id', named=True)
         zip_subdir = str(uuid.uuid4())
         zip_filename = '%s.zip' % zip_subdir
         byte_stream = BytesIO()
@@ -24,22 +24,29 @@ def download_zip_files(user):
                                      aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
         s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                                  aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        members = get_all_members(project.token)
         with zipfile.ZipFile(byte_stream, 'w') as zf:
-            for filename in file_names:
-                file_response = requests.get(filename.download_url)
-                if file_response.status_code == 200:
-                    new_filename = filename.basename + '-' + str(filename.id)
-                    with open(new_filename, 'wb') as f:
-                        f.write(file_response.content)
-                    zip_path = os.path.join(zip_subdir, new_filename)
-                    zf.write(new_filename, zip_path)
-                    os.unlink(new_filename)
-                    download_success = True
-                else:
-                    logger.error('File response error- could not be downloaded', file_response)
-                    download_success = False
-                    zipfile_url = None
-                    break
+            for member in members:
+                for oh_file in member['data']:
+                    file_response = requests.get(oh_file['download_url'])
+                    if file_response.status_code == 200:
+                        new_filename = "{}-{}".format(
+                                            oh_file['id'],
+                                            oh_file['basename'])
+                        with open(new_filename, 'wb') as f:
+                            f.write(file_response.content)
+                        zip_path = os.path.join(
+                                        zip_subdir,
+                                        member['project_member_id'],
+                                        new_filename)
+                        zf.write(new_filename, zip_path)
+                        os.unlink(new_filename)
+                        download_success = True
+                    else:
+                        logger.error('File response error- could not be downloaded', file_response)
+                        download_success = False
+                        zipfile_url = None
+                        break
         if download_success:
             zip_contents = byte_stream.getvalue()
             s3_resource.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(Key=zip_filename,

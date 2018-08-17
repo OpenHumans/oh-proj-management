@@ -10,6 +10,7 @@ from .forms import TokenForm
 from .models import Project, ProjectMember
 from .filter import MemberFilter
 from .tasks import download_zip_files
+from .helpers import get_all_members
 
 
 class HomeView(ListView):
@@ -72,11 +73,8 @@ class MembersView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         token = project.token
-        req_url = 'https://www.openhumans.org/api/direct-sharing' \
-                  '/project/members/?access_token={}'.format(token)
-        member_info = requests.get(req_url).json()
         try:
-            members = member_info['results']
+            members = get_all_members(token)
             for member in members:
                 # updating/creating project member data
                 [m, _] = project.projectmember_set.update_or_create(id=int(member['project_member_id']),
