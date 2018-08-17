@@ -77,7 +77,7 @@ class MembersView(TemplateView):
         members = get_all_members(token)
         for member in members:
             # updating/creating project member data
-            [m, _] = ProjectMember.update_or_create(
+            [m, _] = ProjectMember.objects.update_or_create(
                     id=int(member['project_member_id']),
                     project=project,
                     defaults={
