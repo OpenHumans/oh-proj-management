@@ -7,7 +7,7 @@ import uuid
 from celery.decorators import task
 from celery.utils.log import get_task_logger
 from django.conf import settings
-from .models import Project
+from .models import Project, S3Upload
 from .utility import send_email
 from .helpers import get_all_members, filter_members_group_id
 logger = get_task_logger(__name__)
@@ -58,6 +58,8 @@ def download_zip_files(user, group_id=None):
             zipfile_url = s3_client.generate_presigned_url('get_object',
                                                            Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
                                                                    'Key': zip_filename}, ExpiresIn=86400)
+            s3uploaded_file = S3Upload(key=zip_filename)
+            s3uploaded_file.save()
         send_email(download_success, zipfile_url, project.contact_email, project.name)
     except Exception as e:
         logger.error('Downloading zip file crashed', e)
