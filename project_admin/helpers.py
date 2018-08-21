@@ -1,6 +1,7 @@
 import requests
 from django.core.exceptions import ObjectDoesNotExist
 from .models import ProjectGroup, ProjectMember
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import dateutil.parser
 
 
@@ -65,3 +66,14 @@ def filter_members_group_id(token, group_id):
         if member['project_member_id'] in group_member_ids:
             filtered_members.append(member)
     return filtered_members
+
+
+def paginate_items(queryset, page):
+    paginator = Paginator(queryset, 25)
+    try:
+        paged_queryset = paginator.page(page)
+    except PageNotAnInteger:
+        paged_queryset = paginator.page(1)
+    except EmptyPage:
+        paged_queryset = paginator.page(paginator.num_pages)
+    return paged_queryset
