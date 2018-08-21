@@ -70,3 +70,8 @@ class Note(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     member = models.ForeignKey(ProjectMember, on_delete=models.CASCADE)
+
+
+class S3Upload(models.Model):
+    key = models.CharField(max_length=60)
+    created_at = models.DateTimeField(auto_now_add=True)

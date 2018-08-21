@@ -27,6 +27,7 @@ coverage.xml
 local_settings.py
 staticfiles/
 db.sqlite3
+dump.rdb
 
 # dotenv (environment variables, used for secret/local stuff)
 .env
