@@ -57,7 +57,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for member in filter.qs %}
+        {% for member in members %}
         <tr class="accordion-toggle" data-toggle="collapse" href="#{{member.id}}">
               {% if project.request_username_access %}
               <td>{{member.username}} ({{ member.id }})</td>
@@ -92,5 +92,19 @@
         {% endfor %}
       </tbody>
     </table>
+
+    <nav aria-label="pagination">
+      <ul class="pagination">
+        {% if members.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+            <li class="page-item"><a class="page-link" aria-label="Previous" href="?page={{ members.previous_page_number }}{%if source%}&source={{source}}{%endif%}">previous</a></li>
+        {% endif %}
+            <li class="page-item active"><a class="page-link" href='#'>Page {{ members.number }} of {{ members.paginator.num_pages }}</a></li>
+        {% if members.has_next %}
+            <li class="page-item"><a class="page-link" href="?order_by={{order_by}}&page={{ members.next_page_number }}{%if source%}&source={{source}}{%endif%}">next</a></li>
+            <li class="page-item"><a class="page-link" href="?order_by={{order_by}}&page={{ members.paginator.num_pages }}{%if source%}&source={{source}}{%endif%}">last &raquo;</a></li>
+        {% endif %}
+      </ul>
+</nav>
 
 {% endblock main_container %}

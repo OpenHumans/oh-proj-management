@@ -9,7 +9,7 @@ from .forms import TokenForm
 from .models import Project, ProjectMember, ProjectGroup
 from .filter import MemberFilter
 from .tasks import download_zip_files
-from .helpers import get_all_members, update_members
+from .helpers import get_all_members, update_members, paginate_items
 
 
 class HomeView(ListView):
@@ -78,8 +78,12 @@ class MembersView(TemplateView):
 
             member_list = project.projectmember_set.all()
             member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
+            members_paged = paginate_items(
+                                member_filter.qs,
+                                request.GET.get('page'))
             context.update({'page': 'members',
                             'filter': member_filter,
+                            'members': members_paged,
                             'project': project,
                             'groups': list(project.projectgroup_set.all())
                             })
