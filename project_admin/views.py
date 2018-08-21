@@ -72,14 +72,15 @@ class MembersView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         token = project.token
+        members = get_all_members(token)
         try:
-            members = get_all_members(token)
             update_members(members, project)
 
             member_list = project.projectmember_set.all()
             member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
             context.update({'page': 'members',
                             'filter': member_filter,
+                            'project': project,
                             'groups': list(project.projectgroup_set.all())
                             })
             return self.render_to_response(context)

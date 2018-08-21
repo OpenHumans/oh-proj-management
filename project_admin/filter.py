@@ -20,4 +20,4 @@ class MemberFilter(django_filters.FilterSet):
 
     class Meta:
         model = ProjectMember
-        fields = ['id', 'date_joined', 'sources_shared', 'message_permission', 'file_count', 'groups']
+        fields = ['id', 'username', 'date_joined', 'sources_shared', 'file_count', 'groups']
