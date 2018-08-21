@@ -18,7 +18,7 @@ def update_members(members, project):
                             id=int(oh_member['project_member_id']))
         except ObjectDoesNotExist:
             db_member = ProjectMember(
-                                project_id=73,
+                                project_id=project.id,
                                 id=int(oh_member['project_member_id']))
         db_member.date_joined = dateutil.parser.parse(oh_member['created'])
         db_member.sources_shared = oh_member.get('sources_shared')
@@ -46,8 +46,13 @@ def get_all_members(token):
     req_url = 'https://www.openhumans.org/api/direct-sharing' \
               '/project/members/?access_token={}'.format(token)
     members = requests.get(req_url).json()
+    print(members)
     if 'results' in members.keys():
-        return members['results']
+        results = members['results']
+        while members['next']:
+            members = requests.get(members['next']).json()
+            results += members['results']
+        return results
     else:
         return members
 

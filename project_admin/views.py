@@ -72,8 +72,8 @@ class MembersView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         token = project.token
+        members = get_all_members(token)
         try:
-            members = get_all_members(token)
             update_members(members, project)
 
             member_list = project.projectmember_set.all()
