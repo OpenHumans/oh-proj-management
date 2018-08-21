@@ -22,7 +22,7 @@ def update_members(members, project):
                                 id=int(oh_member['project_member_id']))
         db_member.date_joined = dateutil.parser.parse(oh_member['created'])
         db_member.sources_shared = oh_member.get('sources_shared')
-        db_member.message_permission = oh_member.get('message_permission')
+        db_member.username = oh_member.get('username')
         db_member.save()
         # fetching old file data for this member
         project_member_old_files = project.file_set.filter(member=db_member)

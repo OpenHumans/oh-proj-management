@@ -80,6 +80,7 @@ class MembersView(TemplateView):
             member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
             context.update({'page': 'members',
                             'filter': member_filter,
+                            'project': project,
                             'groups': list(project.projectgroup_set.all())
                             })
             return self.render_to_response(context)
