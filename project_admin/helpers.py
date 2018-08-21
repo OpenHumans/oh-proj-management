@@ -46,7 +46,6 @@ def get_all_members(token):
     req_url = 'https://www.openhumans.org/api/direct-sharing' \
               '/project/members/?access_token={}'.format(token)
     members = requests.get(req_url).json()
-    print(members)
     if 'results' in members.keys():
         results = members['results']
         while members['next']:
