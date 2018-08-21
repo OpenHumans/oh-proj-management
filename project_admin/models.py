@@ -34,6 +34,9 @@ class ProjectGroup(models.Model):
     description = models.TextField(default='')
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
 
 class ProjectMemberManager(models.Manager):
     def get_queryset(self):

@@ -20,7 +20,7 @@
               <tr>
                 <th style="width: 20%">Created on</th>
                 <th style="width: 20%">Last Modified on</th>
-                <th style="width: 20%">Title</th>            
+                <th style="width: 20%">Title</th>
                 <th style="width: 20%">Description</th>
                 <th style="width: 20%">Action</th>
               </tr>
@@ -101,9 +101,9 @@
                 <p>This user is not part of any groups yet</p>
               </div>
             </div>
-          {% endif %}      
+          {% endif %}
         </div>
-        
+
         <!--Data Shared-->
         <div class="tab-pane fade" id="datashared_{{member}}" role="tabpanel" aria-labelledby="datashared-tab">
           {% if member.file_set.all|length > 0 %}
@@ -138,7 +138,7 @@
           {% endif %}
         </div>
     </div>
-    
+
   </div>
 
   <!--Modals here-->
@@ -195,7 +195,7 @@
                       {% endif %}
                     {% endfor %}
                   </select>
-                  <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                  <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple groups</small>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
