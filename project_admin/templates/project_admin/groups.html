@@ -92,11 +92,30 @@
                 </form>
                 <h4 class="mt-4 mb-3">Members</h4>
                 <div class="list-group">
+                  <div class="group_{{ group.pk }}_info collapse show">
                   {% for member in group.projectmember_set.all %}
                     <div class="mb-3">
-                      <li>{{member.id}}</li>
+                      <li>{% firstof member.username member.id %}</li>
                     </div>
                   {% endfor %}
+                  </div>
+                  <div class="form-control group_{{ group.pk }}_info collapse">
+                      <div class="form-group">
+                        <select class="custom-select" name="select_update_members" id="select_update_members" multiple>
+                          {% for member in members %}
+                            <option {%if member in group.projectmember_set.all %}selected{%endif%} value={{ member.id }}>
+                              {% firstof member.username member.id %}
+                              {% if member.groups.all|length > 0 %} - {% endif %}
+                              {% for group in member.groups.all %}
+                                {% if not forloop.first %}, {% endif %}
+                                {{ group.name }}
+                              {% endfor %}
+                            </option>
+                          {% endfor %}
+                        </select>
+                        <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple members</small>
+                      </div>
+                  </div>
 
                   <!-- Delete group -->
                   <div class="mb-1">
