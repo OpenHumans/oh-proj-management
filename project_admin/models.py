@@ -27,6 +27,7 @@ class Project(models.Model):
     slug = models.SlugField(max_length=50)
     type = models.CharField(max_length=50)
     token = models.CharField(max_length=65)
+    refreshed_at = models.DateTimeField(auto_now=True)
 
 
 class ProjectGroup(models.Model):

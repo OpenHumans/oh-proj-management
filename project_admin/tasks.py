@@ -4,13 +4,24 @@ import requests
 import os
 import boto3
 import uuid
+import datetime
 from celery.decorators import task
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from .models import Project, S3Upload
 from .utility import send_email
-from .helpers import get_all_members, filter_members_group_id
+from .helpers import get_all_members, filter_members_group_id, update_members
 logger = get_task_logger(__name__)
+
+
+@task(name='update_project_members')
+def update_project_members(project_id):
+    project = Project.objects.get(pk=project_id)
+    members = get_all_members(project.token)
+    update_members(members, project)
+    project.refreshed_at = datetime.datetime.now()
+    project.save()
+
 
 
 @task(name="download_zip_files")

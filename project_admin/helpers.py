@@ -77,3 +77,12 @@ def paginate_items(queryset, page):
     except EmptyPage:
         paged_queryset = paginator.page(paginator.num_pages)
     return paged_queryset
+
+
+def token_is_valid(token):
+    req_url = 'https://www.openhumans.org/api/' \
+              'direct-sharing/project/?access_token={}'.format(token)
+    project_info = requests.get(req_url).json()
+    if 'detail' not in project_info.keys():
+        return True
+    return False
