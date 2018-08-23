@@ -5,7 +5,8 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from .forms import TokenForm
 from .models import Project, ProjectMember, ProjectGroup
 from .filter import MemberFilter
@@ -74,7 +75,7 @@ class MembersView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         if token_is_valid(project.token):
-            if project.refreshed_at < datetime.now() - timedelta(hours=2):
+            if project.refreshed_at < timezone.now() - timedelta(hours=2):
                 update_project_members.delay(project.id)
             member_list = project.projectmember_set.all()
             member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
@@ -104,7 +105,7 @@ class GroupsView(TemplateView):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
         if token_is_valid(project.token):
-            if project.refreshed_at < datetime.now() - timedelta(hours=2):
+            if project.refreshed_at < timezone.now() - timedelta(hours=2):
                 update_project_members.delay(project.id)
             context.update({'page': 'groups',
                             'members': project.projectmember_set.all(),
