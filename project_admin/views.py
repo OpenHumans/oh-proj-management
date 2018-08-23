@@ -11,7 +11,7 @@ from .forms import TokenForm
 from .models import Project, ProjectMember, ProjectGroup
 from .filter import MemberFilter
 from .tasks import download_zip_files, update_project_members
-from .helpers import get_all_members, update_members, paginate_items, token_is_valid
+from .helpers import token_is_valid, paginate_items
 
 
 class HomeView(ListView):
