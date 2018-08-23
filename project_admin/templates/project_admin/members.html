@@ -96,13 +96,13 @@
     <nav aria-label="pagination">
       <ul class="pagination">
         {% if members.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
-            <li class="page-item"><a class="page-link" aria-label="Previous" href="?page={{ members.previous_page_number }}{%if source%}&source={{source}}{%endif%}">previous</a></li>
+            <li class="page-item"><a class="page-link" href="?page=1&id={{request.GET.id}}&date_joined={{request.GET.date_joined}}&sources_shared{{request.sources_shared.id}}=&file_count={{request.GET.file_count}}&groups={{request.GET.groups}}">&laquo; first</a></li>
+            <li class="page-item"><a class="page-link" aria-label="Previous" href="?page={{ members.previous_page_number }}&id={{request.GET.id}}&date_joined={{request.GET.date_joined}}&sources_shared{{request.sources_shared.id}}=&file_count={{request.GET.file_count}}&groups={{request.GET.groups}}">previous</a></li>
         {% endif %}
             <li class="page-item active"><a class="page-link" href='#'>Page {{ members.number }} of {{ members.paginator.num_pages }}</a></li>
         {% if members.has_next %}
-            <li class="page-item"><a class="page-link" href="?order_by={{order_by}}&page={{ members.next_page_number }}{%if source%}&source={{source}}{%endif%}">next</a></li>
-            <li class="page-item"><a class="page-link" href="?order_by={{order_by}}&page={{ members.paginator.num_pages }}{%if source%}&source={{source}}{%endif%}">last &raquo;</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ members.next_page_number }}&id={{request.GET.id}}&date_joined={{request.GET.date_joined}}&sources_shared{{request.sources_shared.id}}=&file_count={{request.GET.file_count}}&groups={{request.GET.groups}}">next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ members.paginator.num_pages }}&id={{request.GET.id}}&date_joined={{request.GET.date_joined}}&sources_shared{{request.sources_shared.id}}=&file_count={{request.GET.file_count}}&groups={{request.GET.groups}}">last &raquo;</a></li>
         {% endif %}
       </ul>
 </nav>
