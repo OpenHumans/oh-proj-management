@@ -5,11 +5,13 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
+from datetime import timedelta
+from django.utils import timezone
 from .forms import TokenForm
 from .models import Project, ProjectMember, ProjectGroup
 from .filter import MemberFilter
-from .tasks import download_zip_files
-from .helpers import get_all_members, update_members, paginate_items
+from .tasks import download_zip_files, update_project_members
+from .helpers import token_is_valid, paginate_items
 
 
 class HomeView(ListView):
@@ -51,6 +53,7 @@ class LoginView(FormView):
             project_info['token'] = token
             Project.objects.update_or_create(id=project_info['id'],
                                              defaults=project_info)
+            update_project_members.delay(project_info['id'])
             login(self.request, user,
                   backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
@@ -71,11 +74,9 @@ class MembersView(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
-        token = project.token
-        members = get_all_members(token)
-        try:
-            update_members(members, project)
-
+        if token_is_valid(project.token):
+            if project.refreshed_at < timezone.now() - timedelta(hours=2):
+                update_project_members.delay(project.id)
             member_list = project.projectmember_set.all()
             member_filter = MemberFilter(request.GET, request=request, queryset=member_list)
             members_paged = paginate_items(
@@ -88,14 +89,12 @@ class MembersView(TemplateView):
                             'groups': list(project.projectgroup_set.all())
                             })
             return self.render_to_response(context)
-        except Exception as e:
-            # Handle expired master tokens, or serve error message
-            if 'detail' in members:
-                messages.error(self.request, members['detail'] +
-                               ' Check your token in the'
-                               ' project management interface.', 'danger')
-            else:
-                messages.error(self.request, e, 'danger')
+        else:
+            messages.error(
+                        self.request,
+                        ' Your master access token has expired. Please get'
+                        ' a new one from the project management interface.', 'danger')
+            logout(self.request)
             return redirect('login')
 
 
@@ -105,13 +104,19 @@ class GroupsView(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         project = Project.objects.get(user=self.request.user)
-        try:
+        if token_is_valid(project.token):
+            if project.refreshed_at < timezone.now() - timedelta(hours=2):
+                update_project_members.delay(project.id)
             context.update({'page': 'groups',
                             'members': project.projectmember_set.all(),
                             'groups': project.projectgroup_set.all()})
             return self.render_to_response(context)
-        except Exception as e:
-            messages.error(self.request, e, 'danger')
+        else:
+            messages.error(
+                        self.request,
+                        ' Your master access token has expired. Please get'
+                        ' a new one from the project management interface.', 'danger')
+            logout(self.request)
             return redirect('login')
 
 
