@@ -1,0 +1,14 @@
+<form action="{% url 'create_note' member.id %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="new_note_title">Title</label>
+        <input type="text"  class="form-control" name="new_note_title" required>
+    </div>
+    <div class="form-group">
+        <label for="new_note_description">Description</label>
+        <textarea name="new_note_description" class="form-control" rows="4" required></textarea>
+    </div>
+    <div class="modal-footer">
+    <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
+    </div>
+</form>

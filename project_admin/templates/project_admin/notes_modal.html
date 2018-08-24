@@ -1,20 +1,20 @@
-<div id="groupModal" class="modal fade" role="dialog">
+<div id="notesModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Groups for member <span id='member_title'></span></h5>
+        <h5 class="modal-title">Notes for member <span id='notes_member_title'></span></h5>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        <div id='groupModalBody'></div>
+        <div id='notesModalBody'></div>
       </div>
       <div class="modal-footer">
-        <a id="addGroupLink" href='#addGroupModal' data-member_id="test" data-toggle="modal" class="btn btn-outline-primary float-right">Add Group</a>
+        <a id="addNoteLink" href='#addNoteModal' data-member_id="test" data-toggle="modal" class="btn btn-outline-primary float-right">Add Notes</a>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
-{% include 'project_admin/group_modal_add.html' %}
+{% include 'project_admin/notes_modal_add.html' %}
