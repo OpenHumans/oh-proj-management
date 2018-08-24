@@ -1,6 +1,6 @@
 import requests
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView, TemplateView
 from django.contrib.auth.models import User
@@ -171,6 +171,37 @@ def add_to_groups(request):
         )
     ])
     return redirect('members')
+
+
+def group_modal_body(request, member_id):
+    member = ProjectMember.objects.get(pk=member_id)
+    return render(request, 'project_admin/group_modal_body.html', {
+                'member': member})
+
+
+def group_modal_add_body(request, member_id):
+    member = ProjectMember.objects.get(pk=member_id)
+    groups = ProjectGroup.objects.filter(project=member.project)
+    return render(request, 'project_admin/group_modal_add_body.html', {
+                'member': member, 'groups': groups})
+
+
+def files_modal_body(request, member_id):
+    member = ProjectMember.objects.get(pk=member_id)
+    return render(request, 'project_admin/files_modal_body.html', {
+                'member': member})
+
+
+def notes_modal_body(request, member_id):
+    member = ProjectMember.objects.get(pk=member_id)
+    return render(request, 'project_admin/notes_modal_body.html', {
+                'member': member})
+
+
+def notes_modal_add_body(request, member_id):
+    member = ProjectMember.objects.get(pk=member_id)
+    return render(request, 'project_admin/notes_modal_add_body.html', {
+                'member': member})
 
 
 def remove_member(request, group_id, member_id):

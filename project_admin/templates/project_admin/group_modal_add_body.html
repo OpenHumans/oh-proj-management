@@ -1,0 +1,19 @@
+<form action="{% url 'add_to_groups' %}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="member_pk" value={{member.id}}>
+  <div class="form-group">
+    <select class="custom-select" name="selected_groups" id="selected_groups" multiple>
+      {% for group in groups %}
+        {% if group not in member.groups.all %}
+            <option value= {{group.id}} title= "{{group.description}}">
+              {{group.name}}({{group.id}})
+            </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple groups</small>
+  </div>
+  <div class="modal-footer">
+      <button type="submit" class="btn btn-outline-success float-right btn-sm">Submit</button>
+  </div>
+</form>

@@ -1,0 +1,40 @@
+{% if member.note_set.all|length > 0 %}
+<table class="table">
+  <thead>
+  <tr>
+    <th style="width: 20%">Created on</th>
+    <th style="width: 20%">Last Modified on</th>
+    <th style="width: 20%">Title</th>
+    <th style="width: 20%">Description</th>
+    <th style="width: 20%">Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for note in member.note_set.all %}
+    <tr>
+      <td>{{ note.created_at }}</td>
+      <td>{{ note.modified_at }}</td>
+        <td>
+          <h10 class="note_{{ note.id }}_info collapse show">{{ note.title }}</h10>
+        </td>
+        <td class="wrap">
+          <h10 class="note_{{ note.id }}_info collapse show">{{ note.description }}</h10>
+        </td>
+        <td>
+          <div class="btn-group">
+            <a class=" btn btn-sm btn-outline-danger" href="{% url 'delete_note' note.id %}">
+                Delete
+            </a>
+          </div>
+        </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <div class="row">
+    <div class="w-100 text-center mt-4 mb-3">
+      <p>This user has no notes yet</p>
+    </div>
+  </div>
+{% endif %}
