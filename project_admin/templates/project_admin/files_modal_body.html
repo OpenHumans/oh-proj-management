@@ -1,0 +1,30 @@
+{% if member.file_set.all|length > 0 %}
+<table class="table">
+  <thead>
+  <tr>
+    <th style="width: 60%">Name</th>
+    <th style="width: 20%">Source</th>
+    <th style="width: 20%">Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for file in member.file_set.all %}
+    <tr>
+      <td>{{ file.basename }}</td>
+      <td>{{ file.source }}</td>
+      <td>
+        <a class="btn btn-sm bg-white border border-success text-success" href="{{ file.download_url }}">
+          Download
+        </a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <div class="row">
+    <div class="w-100 text-center mt-4 mb-3">
+      <p>This user has not shared any files yet</p>
+    </div>
+  </div>
+{% endif %}

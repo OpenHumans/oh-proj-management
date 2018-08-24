@@ -185,6 +185,12 @@ def group_modal_add_body(request, member_id):
                 'member': member, 'groups': groups})
 
 
+def files_modal_body(request, member_id):
+    member = ProjectMember.objects.get(pk=member_id)
+    return render(request, 'project_admin/files_modal_body.html', {
+                'member': member})
+
+
 def notes_modal_body(request, member_id):
     member = ProjectMember.objects.get(pk=member_id)
     return render(request, 'project_admin/notes_modal_body.html', {

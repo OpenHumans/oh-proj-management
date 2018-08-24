@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from project_admin.views import HomeView, MembersView, GroupsView, LoginView, LogoutView, \
     create_group, update_group, delete_group, add_to_groups, remove_member, create_note, update_note, \
     delete_note, download_zip_file, download_zip_file_group, group_modal_body, notes_modal_body, \
-    notes_modal_add_body, group_modal_add_body
+    notes_modal_add_body, group_modal_add_body, files_modal_body
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,6 +23,7 @@ urlpatterns = [
     path('group_modal_add_body/<int:member_id>', group_modal_add_body, name='group_modal_add_body'),
     path('notes_modal_body/<int:member_id>', notes_modal_body, name='notes_modal_body'),
     path('notes_modal_add_body/<int:member_id>', notes_modal_add_body, name='notes_modal_add_body'),
+    path('files_modal_body/<int:member_id>', files_modal_body, name='files_modal_body'),
     path('remove_member/<int:group_id>/<int:member_id>/', remove_member,
          name='remove_member'),
     path('create_note/<int:member_id>', create_note, name='create_note'),

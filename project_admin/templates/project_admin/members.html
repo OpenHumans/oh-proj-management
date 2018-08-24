@@ -71,6 +71,7 @@
               <td>{{ member.sources_shared }}</td>
               <td>
                     {{member.file_count}}
+                    <a href="#filesModal" data-member_id="{{member.id}}" data-toggle="modal"><span data-toggle="tooltip" data-container='body' data-placement="top" title='Click to see files' type="button" class="badge badge-primary"><i class="fas fa-eye"></i></span></a>
               </td>
               <td>
                 {% for group in member.groups.all %}
@@ -79,11 +80,11 @@
                   {% empty %}
                     <em class="text-muted">No group</em>
                 {% endfor %}
-                <a href="#groupModal" data-member_id="{{member.id}}" data-toggle="modal"><span data-toggle="tooltip" data-container='body' data-placement="top" title='Click to edit' type="button" class="badge badge-primary"><i class="fas fa-pencil-alt"></i></span></a>
+                <a href="#groupModal" data-member_id="{{member.id}}" data-toggle="modal"><span data-toggle="tooltip" data-container='body' data-placement="top" title='Click to see/edit groups' type="button" class="badge badge-primary"><i class="fas fa-pencil-alt"></i></span></a>
               </td>
               <td>
                 {{member.note_set.all.count}}
-                <a href="#notesModal" data-member_id="{{member.id}}" data-toggle="modal"><span data-toggle="tooltip" data-container='body' data-placement="top" title='Click to see notes' type="button" class="badge badge-primary"><i class="fas fa-eye"></i></span></a>
+                <a href="#notesModal" data-member_id="{{member.id}}" data-toggle="modal"><span data-toggle="tooltip" data-container='body' data-placement="top" title='Click to see/edit notes' type="button" class="badge badge-primary"><i class="fas fa-pencil-alt"></i></span></a>
               </td>
           </tr>
         {% endfor %}
@@ -106,5 +107,6 @@
 
  {% include 'project_admin/group_modal.html' %}
  {% include 'project_admin/notes_modal.html' %}
+ {% include 'project_admin/files_modal.html' %}
 
 {% endblock main_container %}
