@@ -30,8 +30,8 @@ def update_members(members, project):
 
         for file in oh_member['data']:
             # maintaining a list of obsolete files for this member in database
-            project_member_old_files = project_member_old_files.exclude(id=file['id'])
-            project.file_set.update_or_create(id=file['id'],
+            project_member_old_files = project_member_old_files.exclude(oh_file_id=file['id'])
+            project.file_set.update_or_create(oh_file_id=file['id'],
                                               basename=file['basename'],
                                               created=dateutil.parser.parse(file['created']),
                                               source=file['source'],
