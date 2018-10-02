@@ -256,3 +256,39 @@ def download_zip_file_group(request, group_pk):
                 'File download started with task id: ' + str(task.id) +
                 '. You will receive an email shortly.')
     return redirect('groups')
+
+
+def batch_processing(request):
+    print(request.POST)
+    valid_filters = [
+                        'file_count', 'id',
+                        'sources_shared', 'groups', 'date_joined']
+    filter_params = {}
+    for f in valid_filters:
+        if request.POST.get(f, ''):
+            if f == 'date_joined':
+                filter_params['date_joined__gte'] = request.POST.get(f)
+            else:
+                filter_params[f] = request.POST.get(f)
+    filtered_members = ProjectMember.objects.filter(**filter_params)
+    project = Project.objects.get(user=request.user)
+    group = project.projectgroup_set.create(
+        name='Bulk created group',
+        description='This is a bulk created group, edit to change the name/description'
+    )
+    through_model = ProjectMember.groups.through
+    through_model.objects.bulk_create([
+        through_model(projectgroup=group, projectmember=member)
+        for member in filtered_members
+    ])
+    if request.POST.get('download'):
+        task = download_zip_files.delay(request.user.id, group.pk)
+        messages.info(
+                request,
+                'File download started with task id: ' + str(task.id) +
+                '. You will receive an email shortly.')
+    else:
+        messages.info(
+                request,
+                'Created new bulk group. See Groups menu to change its name')
+    return redirect('members')
