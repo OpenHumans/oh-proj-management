@@ -23,6 +23,33 @@ def update_project_members(project_id):
     project.save()
 
 
+@task(name="compile_metadata")
+def compile_metadata(user):
+    print('start')
+    project = Project.objects.get(user=user)
+    filename = project.name + "." + str(uuid.uuid4()) + '.project_members.csv'
+    print(filename)
+    s3_resource = boto3.resource('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+    s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+    members = get_all_members(project.token)
+    metadata = "project_member_id\tdate_joined\tnumber_of_files_shared\n"
+    for member in members:
+        metadata += "{0}\t{1}\t{2}\n".format(
+            member['project_member_id'],
+            member['created'],
+            len(member['data']))
+    s3_resource.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(Key=filename,
+                                                                    Body=metadata,
+                                                                    ContentType='text/csv')
+    zipfile_url = s3_client.generate_presigned_url('get_object',
+                                                   Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                                                           'Key': filename}, ExpiresIn=86400)
+    s3uploaded_file = S3Upload(key=filename)
+    s3uploaded_file.save()
+    send_email(True, zipfile_url, project.contact_email, project.name)
+
 
 @task(name="download_zip_files")
 def download_zip_files(user, group_id=None):

@@ -46,9 +46,10 @@
       <input type="hidden" id="sources_shared" name="sources_shared" value="{{filter.data.sources_shared}}">
       <input type="hidden" id="file_count" name="file_count" value="{{filter.data.file_count}}">
       <input type="hidden" id="groups" name="groups" value="{{filter.data.groups}}">
-      <a class="my-2 btn btn-sm btn-outline-info" href="{% url 'download_zip_file' %}">Download data of all users</a>
+      <a class="my-2 btn btn-sm btn-outline-info" href="{% url 'download_metadata' %}">Download metadata of all users</a>
+      <a class="my-2 btn btn-sm btn-outline-info" href="{% url 'download_zip_file' %}">Download data files of all users</a>
       <input type="submit" class='my-2 btn btn-sm btn-outline-info' value="Group filtered set" name="group" />
-      <input type="submit" class='my-2 btn btn-sm btn-outline-info' value="Group filtered set & download its data" name="download" />
+      <input type="submit" class='my-2 btn btn-sm btn-outline-info' value="Group filtered set & download all data for its members" name="download" />
 </form>
     <!--Members-->
     <table class="table">

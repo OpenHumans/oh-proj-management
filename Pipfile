@@ -1,19 +1,14 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [dev-packages]
-
 "flake8" = "*"
 coverage = "*"
 vcrpy = "*"
 
-
 [packages]
-
 certifi = "*"
 chardet = "*"
 configparser = "*"
@@ -37,7 +32,5 @@ redis = "*"
 django-storages = "*"
 botocore = "*"
 
-
 [requires]
-
 python_version = "3.6"
