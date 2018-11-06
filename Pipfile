@@ -31,7 +31,6 @@ celery = "*"
 redis = "*"
 django-storages = "*"
 botocore = "*"
-django-heroku = "*"
 
 [requires]
 python_version = "3.6"
