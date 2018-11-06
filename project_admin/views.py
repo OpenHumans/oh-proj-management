@@ -10,7 +10,7 @@ from django.utils import timezone
 from .forms import TokenForm
 from .models import Project, ProjectMember, ProjectGroup
 from .filter import MemberFilter
-from .tasks import download_zip_files, update_project_members
+from .tasks import download_zip_files, update_project_members, compile_metadata
 from .helpers import token_is_valid, paginate_items
 
 
@@ -242,6 +242,13 @@ def delete_note(request, note_id):
 
 def download_zip_file(request):
     task = download_zip_files.delay(request.user.id)
+    messages.info(request, 'File download started with task id: ' + str(task.id) +
+                  '. You will receive an email shortly.')
+    return redirect('members')
+
+
+def download_metadata(request):
+    task = compile_metadata.delay(request.user.id)
     messages.info(request, 'File download started with task id: ' + str(task.id) +
                   '. You will receive an email shortly.')
     return redirect('members')
