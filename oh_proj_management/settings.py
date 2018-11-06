@@ -177,8 +177,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
 # CELERY STUFF
 BROKER_URL = os.getenv('REDIS_URL', 'redis://')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://')
@@ -200,3 +198,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'testkeyifnone')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'testkeyifnone')
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'testkeyifnone')
+
+
+import django_heroku
+django_heroku.settings(locals())
