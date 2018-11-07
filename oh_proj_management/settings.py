@@ -190,4 +190,20 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'testkeyifnone')
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'testkeyifnone')
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+        },
+    },
+}
+
 django_heroku.settings(locals())
