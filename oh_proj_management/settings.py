@@ -196,5 +196,3 @@ sentry_sdk.init(
     dsn=os.getenv('SENTRY', 'empty'),
     integrations=[DjangoIntegration()]
 )
-
-django_heroku.settings(locals())
