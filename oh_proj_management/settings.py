@@ -8,6 +8,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+import django_heroku
+
 import os
 
 import dj_database_url
@@ -190,3 +192,5 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'testkeyifnone')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'testkeyifnone')
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'testkeyifnone')
+
+django_heroku.settings(locals())
