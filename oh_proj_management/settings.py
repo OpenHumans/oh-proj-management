@@ -46,10 +46,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'testkeyifnone')
 DEBUG = to_bool(os.getenv('DEBUG'), default=False)
 
 # Enable any host for Heroku deployments.
-if to_bool(os.getenv('ON_HEROKU'), False):
-    ALLOWED_HOSTS = ['*']
-else:
-    ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
