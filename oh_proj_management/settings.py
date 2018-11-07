@@ -16,6 +16,8 @@ import dj_database_url
 
 from env_tools import apply_env
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Apply the env in the .env file
 apply_env()
@@ -190,20 +192,9 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'testkeyifnone')
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'testkeyifnone')
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
-        },
-    },
-}
+sentry_sdk.init(
+    dsn=os.getenv('SENTRY', 'empty'),
+    integrations=[DjangoIntegration()]
+)
 
 django_heroku.settings(locals())

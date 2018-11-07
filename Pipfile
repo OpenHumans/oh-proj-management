@@ -32,6 +32,7 @@ redis = "*"
 django-storages = "*"
 botocore = "*"
 django-heroku = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.6"
