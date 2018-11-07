@@ -31,7 +31,6 @@ celery = "*"
 redis = "*"
 django-storages = "*"
 botocore = "*"
-django-heroku = "*"
 sentry-sdk = "*"
 
 [requires]
