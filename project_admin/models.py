@@ -80,5 +80,5 @@ class Note(models.Model):
 
 
 class S3Upload(models.Model):
-    key = models.CharField(max_length=60)
+    key = models.CharField(max_length=260)
     created_at = models.DateTimeField(auto_now_add=True)
