@@ -34,7 +34,7 @@ def compile_metadata(user):
     s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                              aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
     members = get_all_members(project.token)
-    metadata = "project_member_id\tdate_joined\tnumber_of_files_shared\n"
+    metadata = "project_member_id\tusername\tdate_joined\tnumber_of_files_shared\n"
     for member in members:
         if 'username' in member.keys():
             metadata += "{0}\t{1}\t{2}\t{3}\n".format(
