@@ -57,10 +57,10 @@ def get_all_members(token):
                 member_urls.append(i['exchange_member'])
         results = []
         for member_url in member_urls:
-            member = requests.get(member_url)
+            member = requests.get(member_url).json()
             output_member = deepcopy(member)
             while member['next']:
-                member = requests.get(member['next'])
+                member = requests.get(member['next']).json()
                 output_member['data'] += member['data']
             results += [output_member]
         return output_member
