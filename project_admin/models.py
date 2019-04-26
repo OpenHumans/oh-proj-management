@@ -19,7 +19,6 @@ class Project(models.Model):
     long_description = models.TextField()
     name = models.CharField(max_length=50)
     organization = models.CharField(max_length=200, blank=True)
-    request_message_permission = models.BooleanField()
     request_sources_access = models.TextField()
     request_username_access = models.BooleanField()
     returned_data_description = models.CharField(max_length=200, blank=True)
