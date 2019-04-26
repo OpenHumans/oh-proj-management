@@ -14,7 +14,7 @@ interactions:
         to serve as an example project for requesting and receiving data from members.
         Please don''t join this project unless you''re interested in your account
         being used for demo purposes and have been invited to do so.","name":"Example
-        Project: Data Access","organization":"Open Humans","request_message_permission":false,"request_sources_access":[],"request_username_access":false,"returned_data_description":"","short_description":"An
+        Project: Data Access","organization":"Open Humans","request_sources_access":[],"request_username_access":false,"returned_data_description":"","short_description":"An
         example project demonstrating how to retrieve data from member accounts.","slug":"example-project-data-access","type":"on-site"}'}
     headers:
       Allow: ['GET, HEAD, OPTIONS']
