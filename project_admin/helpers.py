@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import ProjectGroup, ProjectMember
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import dateutil.parser
+from copy import deepcopy
 
 
 def update_members(members, project):
@@ -48,11 +49,21 @@ def get_all_members(token):
               '/project/members/?access_token={}'.format(token)
     members = requests.get(req_url).json()
     if 'results' in members.keys():
-        results = members['results']
+        # results = members['results']
+        member_urls = [i['exchange_member'] for i in members['results']]
         while members['next']:
             members = requests.get(members['next']).json()
-            results += members['results']
-        return results
+            for i in members['results']:
+                member_urls.append(i['exchange_member'])
+        results = []
+        for member_url in member_urls:
+            member = requests.get(member_url)
+            output_member = deepcopy(member)
+            while member['next']:
+                member = requests.get(member['next'])
+                output_member['data'] += member['data']
+            results += [output_member]
+        return output_member
     else:
         return members
 
