@@ -56,6 +56,7 @@ def get_all_members(token):
             for i in members['results']:
                 member_urls.append(i['exchange_member'])
         results = []
+        print('got all member URLs, now getting complete objects')
         for member_url in member_urls:
             member = requests.get(member_url).json()
             output_member = deepcopy(member)
@@ -63,7 +64,8 @@ def get_all_members(token):
                 member = requests.get(member['next']).json()
                 output_member['data'] += member['data']
             results += [output_member]
-        return output_member
+        print('got all member objects and return')
+        return results
     else:
         return members
 
