@@ -51,7 +51,6 @@ class LoginView(FormView):
             )[0]
             project_info['user'] = user
             project_info['token'] = token
-            print(project_info)
             Project.objects.update_or_create(id=project_info['id'],
                                              defaults=project_info)
             update_project_members.delay(project_info['id'])
