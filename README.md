@@ -30,6 +30,10 @@ Read [this issue string](https://github.com/OpenHumans/open-humans/issues/690) f
  * In a browser, go to http://127.0.0.1:8000/
  * Before commiting run `flake8` and fix PEP8 warnings.
 
+## Demo web version
+
+https://oh-projectmanagement.herokuapp.com/login/ 
+
 ## Contributing
 
 ### Tips
